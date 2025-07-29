@@ -1,7 +1,8 @@
-class Booking {
-    public required string BookingId;
-    public required string PassengerId;
-    public required string FlightId;
-    public FlightClass Class;
-    public double Price;
+public class Booking
+{
+    public required string BookingId { get; set; }
+    public required string PassengerId { get; set; }
+    public required string FlightId { get; set; }
+    public required FlightClass Class { get; set; }
+    public required double Price { get; set; }
 }
