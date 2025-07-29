@@ -1,3 +1,5 @@
+namespace Ticket_Booking.Models;
+
 public class Booking
 {
     public required string BookingId { get; set; }
