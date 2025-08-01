@@ -5,7 +5,12 @@ namespace Ticket_Booking.Repository;
 public class BookingRepository
 {
     private List<Booking> _bookings = new();
-    private string _filePath = "Files/Bookings.csv";
+    private readonly string _filePath;
+
+    public BookingRepository(string filePath)
+    {
+        _filePath = filePath;
+    }
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = GenerateNumericId().ToString();
@@ -13,7 +18,7 @@ public class BookingRepository
         SaveToCsv(booking);
     }
 
-    private void SaveToCsv(Booking booking)
+    private static void SaveToCsv(Booking booking)
     {
         var line = $"{booking.BookingId},{booking.PassengerId},{booking.FlightId},{booking.Class},{booking.Price}";
         File.AppendAllText("Files/Bookings.csv", line + Environment.NewLine);

@@ -18,12 +18,12 @@ public class FlightUI
     {
         Console.WriteLine("=== Search Flights ===");
 
-        string depCountry = Prompt("Departure Country");
-        string destCountry = Prompt("Destination Country");
+        string? depCountry = Prompt("Departure Country");
+        string? destCountry = Prompt("Destination Country");
 
         DateTime? depDate = PromptDate("Departure Date (yyyy-MM-dd)");
-        string depAirport = Prompt("Departure Airport");
-        string arrAirport = Prompt("Arrival Airport");
+        string? depAirport = Prompt("Departure Airport");
+        string? arrAirport = Prompt("Arrival Airport");
 
         FlightClass? selectedClass = PromptFlightClass("Flight Class (Economy/Business/FirstClass)");
         double? maxPrice = PromptDouble("Max Price");
@@ -33,16 +33,16 @@ public class FlightUI
         DisplayFlights(results, selectedClass);
     }
 
-    private string Prompt(string label)
+    private static string? Prompt(string label)
     {
         Console.Write($"{label}: ");
         return Console.ReadLine();
     }
 
-    private DateTime? PromptDate(string label)
+    private static DateTime? PromptDate(string label)
     {
         Console.Write($"{label}: ");
-        string input = Console.ReadLine();
+        string? input = Console.ReadLine();
         if (DateTime.TryParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsed))
         {
             return parsed;
@@ -50,10 +50,10 @@ public class FlightUI
         return null;
     }
 
-    private double? PromptDouble(string label)
+    private static double? PromptDouble(string label)
     {
         Console.Write($"{label}: ");
-        string input = Console.ReadLine();
+        string? input = Console.ReadLine();
         if (double.TryParse(input, out double value))
         {
             return value;
@@ -64,7 +64,7 @@ public class FlightUI
     private FlightClass? PromptFlightClass(string label)
     {
         Console.Write($"{label}: ");
-        string input = Console.ReadLine();
+        string? input = Console.ReadLine();
         if (Enum.TryParse(input, out FlightClass flightClass))
         {
             return flightClass;
@@ -72,7 +72,7 @@ public class FlightUI
         return null;
     }
 
-    private void DisplayFlights(List<Flight> flights, FlightClass? selectedClass)
+    private static void DisplayFlights(List<Flight> flights, FlightClass? selectedClass)
     {
         Console.WriteLine("\n--- Available Flights ---");
 

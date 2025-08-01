@@ -14,10 +14,9 @@ public class FlightService
         _repository = repository;
     }
 
-    public List<Flight> SearchFlights(string depCountry, string destCountry, DateTime? date, string depAirport, string arrAirport, double? maxPrice, FlightClass? selectedClass)
+    public List<Flight> SearchFlights(string? depCountry, string? destCountry, DateTime? date, string? depAirport, string? arrAirport, double? maxPrice, FlightClass? selectedClass)
     {
         var flights = _repository.GetAllFlights();
-        Console.WriteLine(flights.Count);
         return flights.Where(f =>
             (string.IsNullOrEmpty(depCountry) || f.DepartureCountry.Equals(depCountry, StringComparison.OrdinalIgnoreCase)) &&
             (string.IsNullOrEmpty(destCountry) || f.DestinationCountry.Equals(destCountry, StringComparison.OrdinalIgnoreCase)) &&

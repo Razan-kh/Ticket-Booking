@@ -20,8 +20,12 @@ public class BookingUI
         Console.WriteLine("=== Book a Flight ===");
 
         Console.Write("Enter Flight ID: ");
-        string flightId = Console.ReadLine();
-
+        string? flightId = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(flightId))
+            {
+                Console.WriteLine("Flight ID cannot be empty.");
+                return;
+            }
         var flight = _flightService.GetFlightById(flightId);
 
         if (flight is null)
@@ -37,7 +41,7 @@ public class BookingUI
         }
 
         Console.Write("Select class to book (Economy/Business/FirstClass): ");
-        string inputClass = Console.ReadLine();
+        string? inputClass = Console.ReadLine();
 
         if (!Enum.TryParse(inputClass, out FlightClass selectedClass))
         {
@@ -45,7 +49,12 @@ public class BookingUI
             return;
         }
         Console.Write("Enter your Passenger ID: ");
-        string passengerId = Console.ReadLine();
+        string? passengerId = Console.ReadLine();
+        if (string.IsNullOrEmpty(passengerId))
+        {
+             Console.WriteLine("Invalid Passenger Id");
+            return;
+        }
          _bookingService.BookFlight(passengerId,flightId, selectedClass);
     }
 }
