@@ -7,8 +7,9 @@ namespace Ticket_Booking;
 class MainClass
 {
     public static void Main()
-    {   
-        var flightRepo = new FlightRepository();
+    {
+        string flightsFile = "Files/Flights.csv";
+        var flightRepo = new FlightRepository(flightsFile);
         var flightService = new FlightService(flightRepo);
         while (true)
         {
@@ -20,7 +21,7 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new FlightUI(flightService);
+                            FlightUI ui = new (flightService);
                             ui.Run();
                             break;
 
@@ -33,6 +34,6 @@ class MainClass
                     break;
             }
         }
-        
+
     }
 }

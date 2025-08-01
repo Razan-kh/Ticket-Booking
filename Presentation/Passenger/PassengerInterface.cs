@@ -8,7 +8,7 @@ class PassengerInterface
         {
             Console.WriteLine("=== Main Menu ===");
             System.Console.WriteLine("1. Search for Available Flights"); 
-            string consoleChoice = Console.ReadLine();
+            string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {
                 Console.WriteLine("Invalid option. Please try again.");
