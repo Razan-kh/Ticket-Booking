@@ -1,6 +1,4 @@
-using Ticket_Booking.Presentation;
-
-namespace Ticket_Booking;
+namespace Ticket_Booking.Presentation;
 
 class UserInterface
 {
@@ -11,7 +9,7 @@ class UserInterface
             Console.WriteLine("=== Main Menu ===");
             System.Console.WriteLine("- If you are a passenger, Press 1"); 
             System.Console.WriteLine("- If you are  a manager, Press 2"); 
-            string consoleChoice = Console.ReadLine();
+            string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {
                 Console.WriteLine("Invalid option. Please try again.");
