@@ -1,26 +1,26 @@
 // BookingService.cs
+using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
 
 public class BookingService 
 {
-    private readonly FlighRepository _flightRepo;
+    private readonly FlightRepository _flightRepo;
     private readonly BookingRepository _bookingRepo;
 
-    public BookingService(FlighRepository flightRepo, BookingRepository bookingRepo)
+    public BookingService(FlightRepository flightRepo, BookingRepository bookingRepo)
     {
         _flightRepo = flightRepo;
         _bookingRepo = bookingRepo;
     }
 
-    public Booking BookFlight(string passengerId, string flightId, FlightClass selectedClass)
-    {
+    public void BookFlight(string passengerId, string flightId, FlightClass selectedClass)
+    {  
         var flight = _flightRepo.GetFlightById(flightId);
-        if (flight == null)
+        if (flight is null)
             throw new Exception("Flight not found");
 
         if (!flight.AvailableSeats.ContainsKey(selectedClass) || flight.AvailableSeats[selectedClass] <= 0)
             throw new Exception("No available seats for this class");
-
         flight.AvailableSeats[selectedClass]--;
 
         var price = flight.Prices[selectedClass];
@@ -35,7 +35,5 @@ public class BookingService
 
         _bookingRepo.SaveBooking(booking);
         _flightRepo.UpdateFlight(flight);
-
-        return booking;
     }
 }

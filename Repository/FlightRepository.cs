@@ -9,15 +9,14 @@ using Ticket_Booking.Models;
 public class FlightRepository
 {
     private string filePath = "Files/Flights.csv";
-
+    private List<Flight> _flights = new List<Flight>();
     public List<Flight> GetAllFlights()
     {
-        var flights = new List<Flight>();
-
+        _flights.Clear();
         if (!File.Exists(filePath))
-            return flights;
+            return _flights;
 
-        var lines = File.ReadAllLines(filePath);
+        var lines = File.ReadAllLines(filePath).Skip(1);
 
         foreach (var line in lines)
         {
@@ -47,9 +46,38 @@ public class FlightRepository
                 }
             };
 
-            flights.Add(flight);
+            _flights.Add(flight);
         }
 
-        return flights;
+        return _flights;
     }
+
+    public Flight? GetFlightById(string flightId)
+    { 
+        _flights = GetAllFlights();
+        return _flights.FirstOrDefault(f => f.Id == flightId);
+    }
+
+    public void UpdateFlight(Flight updatedFlight)
+    {
+        var index = _flights.FindIndex(f => f.Id == updatedFlight.Id);
+        if (index != -1)
+        {
+            _flights[index] = updatedFlight;
+            SaveFlightsToCsv(_flights, "Files/Flights.csv");
+        }
+    }
+    private void SaveFlightsToCsv(List<Flight> flights, string path)
+    {
+        using var writer = new StreamWriter(path);
+        writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
+
+        foreach (var flight in flights)
+        {
+            writer.WriteLine($"{flight.Id},{flight.DepartureCountry},{flight.DestinationCountry},{flight.DepartureDate.ToString("yyyy-MM-dd")},{flight.DepartureAirport},{flight.ArrivalAirport}," +
+                $"{flight.AvailableSeats[FlightClass.Economy]},{flight.AvailableSeats[FlightClass.Business]},{flight.AvailableSeats[FlightClass.FirstClass]}," +
+                $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
+        }
+    }
+
 }

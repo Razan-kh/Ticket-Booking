@@ -10,6 +10,8 @@ class MainClass
     {   
         var flightRepo = new FlightRepository();
         var flightService = new FlightService(flightRepo);
+        var bookingRepo = new BookingRepository();
+        var bookingService = new BookingService(flightRepo,bookingRepo);
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -23,7 +25,10 @@ class MainClass
                             FlightUI ui = new FlightUI(flightService);
                             ui.Run();
                             break;
-
+                        case PassengerOptions.AddBooking:
+                            BookingUI bookingUI = new BookingUI(flightService, bookingService);
+                            bookingUI.Run();
+                            break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
                             break;

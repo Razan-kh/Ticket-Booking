@@ -27,4 +27,10 @@ public class FlightService
             (!maxPrice.HasValue || (selectedClass.HasValue && f.Prices[selectedClass.Value] <= maxPrice.Value))
         ).ToList();
     }
+
+    public Flight? GetFlightById(string flightId)
+    {
+        Flight? flight=_repository.GetFlightById(flightId);
+        return flight;
+    }
 }
