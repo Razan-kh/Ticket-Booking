@@ -8,7 +8,8 @@ class PassengerInterface
         {
             Console.WriteLine("=== Main Menu ===");
             System.Console.WriteLine(@"1. Search for Available Flights
-2. Book a Flight"); 
+2. Book a Flight
+3. View Personal Bookings"); 
             string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {
