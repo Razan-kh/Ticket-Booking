@@ -8,12 +8,8 @@ using Ticket_Booking.Models;
 
 public class FlightRepository
 {
-    private string _filePath = "Files/Flights.csv";
+    private string filePath = "Files/Flights.csv";
 
-    public FlightRepository()
-    {
-        _flights = LoadFlightsFromCsv();
-    }
     public List<Flight> GetAllFlights()
     {
         var flights = new List<Flight>();
@@ -55,44 +51,5 @@ public class FlightRepository
         }
 
         return flights;
-    }
-    public Flight? GetFlightById(string flightId)
-    {
-        return _flights.FirstOrDefault(f => f.Id == flightId);
-    }
-
-    public void UpdateFlight(Flight flight)
-    {
-        var index = _flights.FindIndex(f => f.Id == flight.Id);
-        if (index != -1)
-        {
-            _flights[index] = flight;
-            SaveFlightsToCsv();
-        }
-    }
-    public void SaveFlightsToCsv(List<Flight> flights)
-    {
-        var lines = new List<string>();
-
-        foreach (var flight in flights)
-        {
-            string prices = string.Join(";", flight.Prices.Select(p => $"{p.Key}:{p.Value}"));
-            string seats = string.Join(";", flight.AvailableSeats.Select(s => $"{s.Key}:{s.Value}"));
-
-            string line = string.Join(",",
-                flight.Id,
-                flight.DepartureCountry,
-                flight.DestinationCountry,
-                flight.DepartureDate.ToString("yyyy-MM-dd"),
-                flight.DepartureAirport,
-                flight.ArrivalAirport,
-                prices,
-                seats
-            );
-
-            lines.Add(line);
-        }
-
-        File.WriteAllLines(_filePath, lines);
     }
 }
