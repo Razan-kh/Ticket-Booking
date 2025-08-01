@@ -9,7 +9,7 @@ class MainClass
     public static void Main()
     {
         string flightsFile = "Files/Flights.csv";
-        string bookingFile = "Files/Flights.csv";
+        string bookingFile = "Files/Bookings.csv";
         var flightRepo = new FlightRepository(flightsFile);
         var flightService = new FlightService(flightRepo);
         var bookingRepo = new BookingRepository(bookingFile);
@@ -30,6 +30,16 @@ class MainClass
                         case PassengerOptions.AddBooking:
                             BookingUI bookingUI = new BookingUI(flightService, bookingService);
                             bookingUI.Run();
+                            break;
+                        case PassengerOptions.ModifyBooking:
+                            Console.Write("Enter Booking ID to modify: ");
+                            var modifyId = Console.ReadLine();
+                            Console.Write("Enter New Flight ID: ");
+                            var newFlight = Console.ReadLine();
+                            Console.Write("Enter New Class (Economy/Business/FirstClass): ");
+                            var newClass = Enum.Parse<FlightClass>(Console.ReadLine()!);
+                            bookingService.ModifyBooking(modifyId!, newFlight!, newClass);
+                            Console.WriteLine("Booking updated.");
                             break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
