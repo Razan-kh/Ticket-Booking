@@ -31,9 +31,29 @@ class MainClass
                     }
                     break;
                 case MainMenuOptions.Manager:
+                    ManagerOptions ManagerOption = ManagerInterface.PrintPassengerMenu();
+                    switch (ManagerOption)
+                    {
+                        case ManagerOptions.UploadUpdate:
+                            Console.Write("Enter path to the flight CSV file: ");
+                            string? csvPath = Console.ReadLine();
+                            if (string.IsNullOrEmpty(csvPath))
+                            {
+                                Console.WriteLine("Invalid Name");
+                                continue;
+                            }
+                            var errors = flightService.BatchUploadFlights(csvPath);
+                            if (errors.Count != 0)
+                            {
+                                Console.WriteLine("Validation Errors:");
+                                foreach (var err in errors)
+                                    Console.WriteLine(err);
+                            }
+                            break; 
+
+                    }
                     break;
             }
         }
-
     }
 }
