@@ -9,11 +9,12 @@ class MainClass
     public static void Main()
     {
         string flightsFile = "Files/Flights.csv";
-        string bookingFile = "Files/Flights.csv";
+        string bookingFile = "Files/Bookings.csv";
         var flightRepo = new FlightRepository(flightsFile);
         var flightService = new FlightService(flightRepo);
         var bookingRepo = new BookingRepository(bookingFile);
         var bookingService = new BookingService(flightRepo,bookingRepo);
+        FilterBookings filterBookings = new FilterBookings(bookingService);
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -24,7 +25,7 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new (flightService);
+                            FlightUI ui = new(flightService);
                             ui.Run();
                             break;
                         case PassengerOptions.AddBooking:
@@ -37,7 +38,14 @@ class MainClass
                     }
                     break;
                 case MainMenuOptions.Manager:
-                    break;
+                    ManagerOptions managerOption = ManagerInterface.PrintPassengerMenu();
+                    switch (managerOption)
+                    {
+                        case ManagerOptions.FilterBookings:
+                            filterBookings.ShowFilterBookingsMenu();
+                            break;
+                    }
+                break;
             }
         }
 

@@ -18,7 +18,10 @@ public class FlightRepository
     {
         _flights.Clear();
         if (!File.Exists(_filePath))
-            throw new FileNotFoundException($"The file at path '{_filePath}' was not found.");
+        {
+            Console.WriteLine("File does not Exist");
+            return [];        
+        }
         var lines = File.ReadAllLines(_filePath).Skip(1);
         foreach (var line in lines)
         {
@@ -27,17 +30,26 @@ public class FlightRepository
             if (parts.Length < 11) continue;
 
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
-                throw new FormatException($"Invalid date format in: {parts[3]}");
+            {
+                Console.WriteLine("Skipping flight due to invalid date format.");
+                continue;
+            }
 
             if (!int.TryParse(parts[6], out var seatsEconomy) ||
                 !int.TryParse(parts[7], out var seatsBusiness) ||
                 !int.TryParse(parts[8], out var seatsFirst))
-                throw new FormatException("Invalid seat count.");
+                {
+                    Console.WriteLine("Skipping flight due to invalid format.");
+                    continue;
+                }
 
             if (!double.TryParse(parts[9], out var priceEconomy) ||
                 !double.TryParse(parts[10], out var priceBusiness) ||
                 !double.TryParse(parts[11], out var priceFirst))
-                throw new FormatException("Invalid price format.");
+                {
+                    Console.WriteLine("Skipping flight due to invalid format.");
+                    continue;
+                }
 
             var flight = new Flight
             {
@@ -79,7 +91,7 @@ public class FlightRepository
         if (index != -1)
         {
             _flights[index] = updatedFlight;
-            SaveFlightsToCsv(_flights, "Files/Flights.csv");
+            SaveFlightsToCsv(_flights, _filePath);
         }
     }
     private void SaveFlightsToCsv(List<Flight> flights, string path)

@@ -1,10 +1,11 @@
+using System.Globalization;
 using Ticket_Booking.Models;
 
 namespace Ticket_Booking.Repository;
 
 public class BookingRepository
 {
-    private List<Booking> _bookings = new();
+    private List<Booking> _bookings = [];
     private readonly string _filePath;
 
     public BookingRepository(string filePath)
@@ -18,13 +19,13 @@ public class BookingRepository
         SaveToCsv(booking);
     }
 
-    private static void SaveToCsv(Booking booking)
+    private void SaveToCsv(Booking booking)
     {
         var line = $"{booking.BookingId},{booking.PassengerId},{booking.FlightId},{booking.Class},{booking.Price}";
-        File.AppendAllText("Files/Bookings.csv", line + Environment.NewLine);
+        File.AppendAllText(_filePath, line + Environment.NewLine);
     }
-    
-      private int GenerateNumericId()
+
+    private int GenerateNumericId()
     {
         int maxId = 0;
 
@@ -43,5 +44,36 @@ public class BookingRepository
         }
 
         return maxId + 1;
+    }
+
+    public List<Booking> GetAll()
+    {
+        if (!File.Exists(_filePath))
+        {
+            Console.WriteLine(_filePath);
+            Console.WriteLine("Warning: Booking file not found.");
+            return [];
+        }
+        
+        return File.ReadAllLines(_filePath)
+            .Select(ParseBooking)
+            .Where(b => b != null)
+            .ToList()!;
+    }
+    private Booking? ParseBooking(string line)
+    {
+        var parts = line.Split(',');
+        if (parts.Length < 5) return null;
+        if (!double.TryParse(parts[4], out var price))
+            return null;
+
+        return new Booking
+        {
+            BookingId = parts[0],
+            PassengerId = parts[1],
+            FlightId = parts[2],
+            Class = Enum.Parse<FlightClass>(parts[3]),
+            Price = price
+        };
     }
 }

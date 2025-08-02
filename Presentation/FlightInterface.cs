@@ -61,7 +61,7 @@ public class FlightUI
         return null;
     }
 
-    private FlightClass? PromptFlightClass(string label)
+    private static FlightClass? PromptFlightClass(string label)
     {
         Console.Write($"{label}: ");
         string? input = Console.ReadLine();
