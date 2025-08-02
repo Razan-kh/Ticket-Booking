@@ -32,4 +32,9 @@ public class FlightService
         return errors;
     }
 
+    public List<(string Field, string Type, string Constraints)> ValidationInfo()
+    {
+        var results = _repository.GetFlightValidationRules();
+        return results;
+    }
 }

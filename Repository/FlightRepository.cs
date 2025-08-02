@@ -6,11 +6,12 @@ using System.IO;
 using System;
 using Ticket_Booking.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 public class FlightRepository
 {
     private readonly string _filePath;
-    private List <Flight> _flights =[];
+    private List<Flight> _flights = [];
 
     public FlightRepository(string filePath)
     {
@@ -80,9 +81,9 @@ public class FlightRepository
         }
 
         var lines = File.ReadAllLines(filePath);
-        int lineNum = 1; 
+        int lineNum = 1;
 
-        foreach (var line in lines) 
+        foreach (var line in lines)
         {
             var parts = line.Split(',');
 
@@ -160,5 +161,29 @@ public class FlightRepository
         bool isValid = Validator.TryValidateObject(flight, context, results, true);
 
         return results.Select(r => r.ErrorMessage).ToList();
+    }
+    public List<(string Field, string Type, string Constraints)> GetFlightValidationRules()
+    {
+        var rules = new List<(string Field, string Type, string Constraints)>();
+        var properties = typeof(Flight).GetProperties();
+
+        foreach (var prop in properties)
+        {
+            string fieldName = prop.Name;
+            string fieldType = prop.PropertyType.Name;
+            var attributes = prop.GetCustomAttributes<ValidationAttribute>();
+
+            string constraints = string.Join(", ", attributes.Select(attr =>
+            {
+                if (attr is RequiredAttribute) return "Required";
+                if (attr is RangeAttribute rangeAttr) return $"Range({rangeAttr.Minimum} to {rangeAttr.Maximum})";
+                if (attr is DataTypeAttribute dataTypeAttr) return dataTypeAttr.DataType.ToString();
+                return attr.GetType().Name.Replace("Attribute", "");
+            }));
+
+            rules.Add((fieldName, fieldType, constraints));
+        }
+
+        return rules;
     }
 }

@@ -49,8 +49,14 @@ class MainClass
                                 foreach (var err in errors)
                                     Console.WriteLine(err);
                             }
-                            break; 
-
+                            break;
+                        case ManagerOptions.ValidationInfo:
+                            var validationInfo=flightService.ValidationInfo();
+                            foreach (var rule in validationInfo)
+                            {
+                                Console.WriteLine($"Field: {rule.Field}, Type: {rule.Type}, Constraints: {rule.Constraints}");
+                            }
+                            break;
                     }
                     break;
             }
