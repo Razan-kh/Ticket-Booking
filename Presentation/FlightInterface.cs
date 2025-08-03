@@ -7,12 +7,7 @@ using Ticket_Booking.Repository;
 
 public class FlightUI
 {
-    private readonly FlightService _service;
-
-    public FlightUI(FlightService service)
-    {
-        _service = service;
-    }
+    public required FlightService Service;
 
     public void Run()
     {
@@ -28,7 +23,7 @@ public class FlightUI
         FlightClass? selectedClass = PromptFlightClass("Flight Class (Economy/Business/FirstClass)");
         double? maxPrice = PromptDouble("Max Price");
 
-        var results = _service.SearchFlights(depCountry, destCountry, depDate, depAirport, arrAirport, maxPrice, selectedClass);
+        var results = Service.SearchFlights(depCountry, destCountry, depDate, depAirport, arrAirport, maxPrice, selectedClass);
 
         DisplayFlights(results, selectedClass);
     }
