@@ -6,14 +6,8 @@ using Ticket_Booking.Repository;
 
 public class BookingUI
 {
-    private readonly FlightService _flightService;
-    private readonly BookingService _bookingService;
-
-    public BookingUI(FlightService flightService, BookingService bookingService)
-    {
-        _flightService = flightService;
-        _bookingService = bookingService;
-    }
+    public required FlightService FlightService { get; init; }
+    public required BookingService BookingService { get; init; }
 
     public void Run()
     {
@@ -26,7 +20,7 @@ public class BookingUI
                 Console.WriteLine("Flight ID cannot be empty.");
                 return;
             }
-        var flight = _flightService.GetFlightById(flightId);
+        var flight = FlightService.GetFlightById(flightId);
 
         if (flight is null)
         {
@@ -55,6 +49,6 @@ public class BookingUI
             Console.WriteLine("Invalid Passenger Id");
             return;
         }
-         _bookingService.BookFlight(passengerId,flightId, selectedClass);
+         BookingService.BookFlight(passengerId,flightId, selectedClass);
     }
 }
