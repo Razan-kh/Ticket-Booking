@@ -61,7 +61,7 @@ public class FlightUI
         return null;
     }
 
-    private FlightClass? PromptFlightClass(string label)
+    private static FlightClass? PromptFlightClass(string label)
     {
         Console.Write($"{label}: ");
         string? input = Console.ReadLine();
@@ -84,8 +84,7 @@ public class FlightUI
 
         foreach (var flight in flights)
         {
-            Console.WriteLine($"ID: {flight.Id} | {flight.DepartureCountry} ➡ {flight.DestinationCountry} on {flight.DepartureDate:yyyy-MM-dd}");
-            Console.WriteLine($"Airport: {flight.DepartureAirport} ➝ {flight.ArrivalAirport}");
+            Console.WriteLine(flight);
 
             if (selectedClass.HasValue)
             {
