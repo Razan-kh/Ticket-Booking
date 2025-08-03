@@ -52,7 +52,7 @@ public class BookingUI
         string? passengerId = Console.ReadLine();
         if (string.IsNullOrEmpty(passengerId))
         {
-             Console.WriteLine("Invalid Passenger Id");
+            Console.WriteLine("Invalid Passenger Id");
             return;
         }
          _bookingService.BookFlight(passengerId,flightId, selectedClass);

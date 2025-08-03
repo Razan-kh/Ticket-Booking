@@ -4,13 +4,9 @@ namespace Ticket_Booking.Repository;
 
 public class BookingRepository
 {
-    private List<Booking> _bookings = new();
-    private readonly string _filePath;
+    private List<Booking> _bookings = [];
+    public required string FilePath{ init; get; }
 
-    public BookingRepository(string filePath)
-    {
-        _filePath = filePath;
-    }
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = GenerateNumericId().ToString();
@@ -27,10 +23,9 @@ public class BookingRepository
       private int GenerateNumericId()
     {
         int maxId = 0;
-
-        if (File.Exists(_filePath))
+        if (File.Exists(FilePath))
         {
-            var lines = File.ReadAllLines(_filePath);
+            var lines = File.ReadAllLines(FilePath);
             foreach (var line in lines)
             {
                 var parts = line.Split(',');

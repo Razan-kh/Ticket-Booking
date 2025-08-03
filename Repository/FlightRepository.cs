@@ -8,18 +8,15 @@ using Ticket_Booking.Models;
 
 public class FlightRepository
 {
-    private readonly string _filePath;
+    public required string FilePath { init; get; }
     private List<Flight> _flights = [];
-    public FlightRepository(string filePath)
-    {
-        _filePath = filePath;
-    }
+
     public List<Flight> GetAllFlights()
     {
         _flights.Clear();
-        if (!File.Exists(_filePath))
-            throw new FileNotFoundException($"The file at path '{_filePath}' was not found.");
-        var lines = File.ReadAllLines(_filePath).Skip(1);
+        if (!File.Exists(FilePath))
+            throw new FileNotFoundException($"The file at path '{FilePath}' was not found.");
+        var lines = File.ReadAllLines(FilePath).Skip(1);
         foreach (var line in lines)
         {
             var parts = line.Split(',');
@@ -82,7 +79,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, "Files/Flights.csv");
         }
     }
-    private void SaveFlightsToCsv(List<Flight> flights, string path)
+    private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);
         writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
