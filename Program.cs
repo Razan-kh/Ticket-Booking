@@ -10,10 +10,10 @@ class MainClass
     {
         string flightsFile = "Files/Flights.csv";
         string bookingFile = "Files/Bookings.csv";
-        var flightRepo = new FlightRepository(flightsFile);
-        var flightService = new FlightService(flightRepo);
-        var bookingRepo = new BookingRepository(bookingFile);
-        var bookingService = new BookingService(flightRepo,bookingRepo);
+        var flightRepo = new FlightRepository { FilePath = flightsFile };
+        var flightService = new FlightService { Repository = flightRepo };
+        var bookingRepo = new BookingRepository { FilePath = bookingFile };
+        var bookingService = new BookingService { FlightRepo = flightRepo, BookingRepo = bookingRepo };
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();

@@ -7,16 +7,11 @@ using Ticket_Booking.Models;
 
 public class FlightService
 {
-    private FlightRepository _repository;
-
-    public FlightService(FlightRepository repository)
-    {
-        _repository = repository;
-    }
+    public required FlightRepository Repository { init; get; }
 
     public List<Flight> SearchFlights(string? depCountry, string? destCountry, DateTime? date, string? depAirport, string? arrAirport, double? maxPrice, FlightClass? selectedClass)
     {
-        var flights = _repository.GetAllFlights();
+        var flights = Repository.GetAllFlights();
         return flights.Where(f =>
             (string.IsNullOrEmpty(depCountry) || f.DepartureCountry.Equals(depCountry, StringComparison.OrdinalIgnoreCase)) &&
             (string.IsNullOrEmpty(destCountry) || f.DestinationCountry.Equals(destCountry, StringComparison.OrdinalIgnoreCase)) &&
@@ -29,7 +24,7 @@ public class FlightService
 
     public Flight? GetFlightById(string flightId)
     {
-        Flight? flight=_repository.GetFlightById(flightId);
+        Flight? flight=Repository.GetFlightById(flightId);
         return flight;
     }
 }

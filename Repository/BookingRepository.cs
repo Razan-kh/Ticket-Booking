@@ -5,13 +5,9 @@ namespace Ticket_Booking.Repository;
 
 public class BookingRepository
 {
-    private List<Booking> _bookings = new();
-    private readonly string _filePath;
+    private List<Booking> _bookings = [];
+    public required string FilePath{ init; get; }
 
-    public BookingRepository(string filePath)
-    {
-        _filePath = filePath;
-    }
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = GenerateNumericId().ToString();
@@ -28,10 +24,9 @@ public class BookingRepository
     private int GenerateNumericId()
     {
         int maxId = 0;
-
-        if (File.Exists(_filePath))
+        if (File.Exists(FilePath))
         {
-            var lines = File.ReadAllLines(_filePath);
+            var lines = File.ReadAllLines(FilePath);
             foreach (var line in lines)
             {
                 var parts = line.Split(',');
@@ -48,14 +43,14 @@ public class BookingRepository
     public void Delete(string bookingId)
     {
         var bookings = GetAll().Where(b => b.BookingId != bookingId).ToList();
-        File.WriteAllLines(_filePath, bookings.Select(SerializeBooking));
+        File.WriteAllLines(FilePath, bookings.Select(SerializeBooking));
     }
     public List<Booking> GetAll()
     {
-        if (!File.Exists(_filePath))
+        if (!File.Exists(FilePath))
             throw new FileNotFoundException("Booking file not found.");
 
-        return File.ReadAllLines(_filePath)
+        return File.ReadAllLines(FilePath)
             .Select(ParseBooking)
             .Where(b => b != null)
             .ToList()!;
