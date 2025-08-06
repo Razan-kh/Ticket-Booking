@@ -64,40 +64,13 @@ public class BookingRepository
     }
     public void Delete(string bookingId)
     {
-        var bookings = GetAll().Where(b => b.BookingId != bookingId).ToList();
-        File.WriteAllLines(_filePath, bookings.Select(SerializeBooking));
-    }
-    public List<Booking> GetAll()
-    {
-        if (!File.Exists(_filePath))
-            throw new FileNotFoundException("Booking file not found.");
-
-        return File.ReadAllLines(_filePath)
-            .Select(ParseBooking)
-            .Where(b => b != null)
-            .ToList()!;
-    }
-
-    private Booking? ParseBooking(string line)
-    {
-        var parts = line.Split(',');
-        if (parts.Length < 5) return null;
-        if (!double.TryParse(parts[4], NumberStyles.Any, CultureInfo.InvariantCulture, out var price))
-            throw new FormatException($"Invalid price format: {parts[4]}");
-
-        return new Booking
-        {
-            BookingId = parts[0],
-            PassengerId = parts[1],
-            FlightId = parts[2],
-            Class = Enum.Parse<FlightClass>(parts[3]),
-            Price = price
-        };
+        _bookings=_bookings.Where(b => b.BookingId != bookingId).ToList();
+        File.WriteAllLines(_filePath, _bookings.Select(SerializeBooking));
     }
 
     private string SerializeBooking(Booking booking) =>
         $"{booking.BookingId},{booking.PassengerId},{booking.FlightId},{booking.Class},{booking.Price}";
 
     public Booking? GetById(string bookingId) =>
-        GetAll().FirstOrDefault(b => b.BookingId == bookingId);
+        _bookings.FirstOrDefault(b => b.BookingId == bookingId);
 }

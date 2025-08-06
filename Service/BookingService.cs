@@ -38,8 +38,11 @@ public class BookingService
     public void CancelBooking(string bookingId)
     {
         var booking = _bookingRepo.GetById(bookingId);
-        if (booking == null)
-            throw new Exception("Booking not found.");
+        if (booking is null)
+        {
+            Console.WriteLine("Booking id is wrong");
+            return;  
+        }
 
         _bookingRepo.Delete(bookingId);
     }
