@@ -25,8 +25,8 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new(flightService);
-                            ui.Run();
+                            SearchFlight ui = new SearchFlight{ Service = flightService };
+                            ui.Search();
                             break;
                         case PassengerOptions.AddBooking:
                             BookingUI bookingUI = new BookingUI(flightService, bookingService);

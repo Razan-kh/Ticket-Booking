@@ -9,20 +9,40 @@ using Ticket_Booking.Models;
 public class FlightRepository
 {
     private readonly string _filePath;
-    private List<Flight> _flights = [];
+    private readonly List<Flight> _flights = [];
     public FlightRepository(string filePath)
     {
         _filePath = filePath;
+        _flights = ParseFile(_filePath);
     }
+
     public List<Flight> GetAllFlights()
     {
-        _flights.Clear();
-        if (!File.Exists(_filePath))
-        {
-            Console.WriteLine("File does not Exist");
-            return [];        
-        }
-        var lines = File.ReadAllLines(_filePath).Skip(1);
+        return _flights;
+    }
+    
+    public List<Flight> SearchFlights(FlightFilter filter)
+    {
+        return _flights.Where(f =>
+            (string.IsNullOrEmpty(filter.DepartureCountry) || f.DepartureCountry.Equals(filter.DepartureCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(filter.DestinationCountry) || f.DestinationCountry.Equals(filter.DestinationCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (!filter.DepartureDate.HasValue || f.DepartureDate.Date == filter.DepartureDate.Value.Date) &&
+            (string.IsNullOrEmpty(filter.DepartureAirport) || f.DepartureAirport.Equals(filter.DepartureAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(filter.ArrivalAirport) || f.ArrivalAirport.Equals(filter.ArrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (!filter.MaxPrice.HasValue ||
+                (filter.ClassType.HasValue &&
+                f.Prices.ContainsKey(filter.ClassType.Value) &&
+                f.Prices[filter.ClassType.Value] <= filter.MaxPrice.Value))
+        ).ToList();
+    }
+
+    public List<Flight> ParseFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
+
+        var lines = File.ReadAllLines(filePath);
+
         foreach (var line in lines)
         {
             var parts = line.Split(',');
@@ -80,10 +100,8 @@ public class FlightRepository
     }
 
     public Flight? GetFlightById(string flightId)
-    { 
-        _flights = GetAllFlights();
-        return _flights.FirstOrDefault(f => f.Id == flightId);
-    }
+    => _flights.FirstOrDefault(f => f.Id == flightId);
+
 
     public void UpdateFlight(Flight updatedFlight)
     {
