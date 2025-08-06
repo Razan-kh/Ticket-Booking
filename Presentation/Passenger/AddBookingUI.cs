@@ -6,9 +6,14 @@ using Ticket_Booking.Repository;
 
 public class AddBookingUI
 {
-    public required FlightService FlightService { get; init; }
-    public required BookingService BookingService { get; init; }
+    private readonly FlightService _flightService;
+    private readonly BookingService _bookingService;
 
+    public AddBookingUI(FlightService flightService, BookingService bookingService)
+    {
+        _flightService = flightService;
+        _bookingService = bookingService;
+    }
     public void BookFlight()
     {
         Console.WriteLine("=== Book a Flight ===");
@@ -26,7 +31,7 @@ public class AddBookingUI
             Console.WriteLine("Invalid Passenger Id");
             return;
         }
-        BookingService.BookFlight(passengerId, flightId, selectedClass);
+        _bookingService.BookFlight(passengerId, flightId, selectedClass);
     }
     public static string PromptFlight()
     {
@@ -44,7 +49,7 @@ public class AddBookingUI
     }
     private Flight? ValidateFlight(string flightId)
     {
-        var flight = FlightService.GetFlightById(flightId);
+        var flight = _flightService.GetFlightById(flightId);
         if (flight is null)
         {
             Console.WriteLine("Flight not found.");

@@ -8,15 +8,20 @@ using Ticket_Booking.Models;
 
 public class FlightRepository
 {
-    public required string FilePath { init; get; }
+    private readonly string _filePath;
     private List<Flight> _flights = [];
 
+    public FlightRepository(string filePath)
+    {
+        _filePath = filePath;
+        _flights = GetAllFlights();
+    }
     public List<Flight> GetAllFlights()
     {
         _flights.Clear();
-        if (!File.Exists(FilePath))
-            throw new FileNotFoundException($"The file at path '{FilePath}' was not found.");
-        var lines = File.ReadAllLines(FilePath).Skip(1);
+        if (!File.Exists(_filePath))
+            throw new FileNotFoundException($"The file at path '{_filePath}' was not found.");
+        var lines = File.ReadAllLines(_filePath).Skip(1);
         foreach (var line in lines)
         {
             var parts = line.Split(',');
@@ -65,10 +70,7 @@ public class FlightRepository
     }
 
     public Flight? GetFlightById(string flightId)
-    { 
-        _flights = GetAllFlights();
-        return _flights.FirstOrDefault(f => f.Id == flightId);
-    }
+    => _flights.FirstOrDefault(f => f.Id == flightId);
 
     public void UpdateFlight(Flight updatedFlight)
     {
