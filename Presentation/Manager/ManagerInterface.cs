@@ -9,7 +9,7 @@ class ManagerInterface
       while (true)
         {
             Console.WriteLine("=== Main Menu ===");
-            System.Console.WriteLine(@"1. Filter Bookings"); 
+            Console.WriteLine(@"1. Filter Bookings"); 
             string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {

@@ -1,17 +1,25 @@
 namespace Ticket_Booking.Presentation;
 
 using System;
+using Ticket_Booking.Models;
 
-public class FilterBookings
+public class FilterBookingsUI
 {
     private readonly BookingService _bookingService;
 
-    public FilterBookings(BookingService bookingService)
+    public FilterBookingsUI(BookingService bookingService)
     {
         _bookingService = bookingService;
     }
 
     public void ShowFilterBookingsMenu()
+    {
+        BookingsFilter bookingsFilter = FilterBookingsMenu();
+        var filteredBookings = _bookingService.FilterBookings(bookingsFilter);
+        PrintBookings(filteredBookings);
+    }
+
+    public static BookingsFilter FilterBookingsMenu()
     {
         Console.Clear();
         Console.WriteLine("==== Filter Bookings ====");
@@ -51,20 +59,25 @@ public class FilterBookings
             flightClass = parsedClass;
         }
 
-        var filteredBookings = _bookingService.FilterBookings(
-            flightId,
-            price,
-            departureCountry,
-            destinationCountry,
-            departureDate,
-            departureAirport,
-            arrivalAirport,
-            passengerId,
-            flightClass
-        );
+        BookingsFilter filterBookings = new()
+        {
+            ArrivalAirport = arrivalAirport,
+            DepartureAirport = departureAirport,
+            DestinationCountry = destinationCountry,
+            DepartureCountry = departureCountry,
+            FlightId = flightId,
+            Price = price,
+            PassengerId = passengerId,
+            FlightClass = flightClass,
+            DepartureDate = departureDate
+        };
 
-        Console.WriteLine($"\n==== Found {filteredBookings.Count} Booking(s) ====\n");
-        foreach (var booking in filteredBookings)
+        return filterBookings;
+    }
+    public static void PrintBookings(List<Booking> bookings)
+    {
+        Console.WriteLine($"\n==== Found {bookings.Count} Booking(s) ====\n");
+        foreach (var booking in bookings)
         {
             Console.WriteLine(booking);
         }

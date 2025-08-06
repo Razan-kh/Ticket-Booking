@@ -7,7 +7,12 @@ using Ticket_Booking.Repository;
 
 public class SearchFlight
 {
-    public required FlightService Service { get; init; }
+    private readonly FlightService _flightService;
+
+    public SearchFlight(FlightService flightService)
+    {
+        _flightService = flightService;
+    }
 
     public void Search()
     {
@@ -32,7 +37,7 @@ public class SearchFlight
             DestinationCountry = destCountry,
             MaxPrice = maxPrice
         };
-        var results = Service.SearchFlights(flightFilter);
+        var results = _flightService.SearchFlights(flightFilter);
         DisplayFlights(results, selectedClass);
     }
 

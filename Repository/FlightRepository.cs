@@ -9,18 +9,14 @@ using Ticket_Booking.Models;
 public class FlightRepository
 {
     private readonly string _filePath;
-    private readonly List<Flight> _flights = [];
+    private List<Flight> _flights = [];
+
     public FlightRepository(string filePath)
     {
         _filePath = filePath;
         _flights = ParseFile(_filePath);
     }
 
-    public List<Flight> GetAllFlights()
-    {
-        return _flights;
-    }
-    
     public List<Flight> SearchFlights(FlightFilter filter)
     {
         return _flights.Where(f =>
@@ -39,9 +35,11 @@ public class FlightRepository
     public List<Flight> ParseFile(string filePath)
     {
         if (!File.Exists(filePath))
-            throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
-
-        var lines = File.ReadAllLines(filePath);
+        {
+            Console.WriteLine("Invalid File path");
+            return [];  
+        }
+        var lines = File.ReadAllLines(filePath).Skip(1);
 
         foreach (var line in lines)
         {
@@ -58,19 +56,17 @@ public class FlightRepository
             if (!int.TryParse(parts[6], out var seatsEconomy) ||
                 !int.TryParse(parts[7], out var seatsBusiness) ||
                 !int.TryParse(parts[8], out var seatsFirst))
-                {
-                    Console.WriteLine("Skipping flight due to invalid format.");
-                    continue;
-                }
-
+            {
+                Console.WriteLine("Skipping flight due to invalid format.");
+                continue;
+            }
             if (!double.TryParse(parts[9], out var priceEconomy) ||
                 !double.TryParse(parts[10], out var priceBusiness) ||
                 !double.TryParse(parts[11], out var priceFirst))
-                {
-                    Console.WriteLine("Skipping flight due to invalid format.");
-                    continue;
-                }
-
+            {
+                Console.WriteLine("Skipping flight due to invalid format.");
+                continue;
+            }
             var flight = new Flight
             {
                 Id = parts[0],
@@ -100,8 +96,7 @@ public class FlightRepository
     }
 
     public Flight? GetFlightById(string flightId)
-    => _flights.FirstOrDefault(f => f.Id == flightId);
-
+     => _flights.FirstOrDefault(f => f.Id == flightId);
 
     public void UpdateFlight(Flight updatedFlight)
     {
@@ -112,7 +107,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, _filePath);
         }
     }
-    private void SaveFlightsToCsv(List<Flight> flights, string path)
+    private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);
         writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
@@ -125,4 +120,6 @@ public class FlightRepository
         }
     }
 
+    public List<Flight> GetAllFlights()
+    => _flights;
 }

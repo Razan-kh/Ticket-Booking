@@ -1,4 +1,3 @@
-using System.Globalization;
 using Ticket_Booking.Models;
 
 namespace Ticket_Booking.Repository;
@@ -11,10 +10,12 @@ public class BookingRepository
     public BookingRepository(string filePath)
     {
         _filePath = filePath;
+        _bookings = LoadBookings(_filePath);
     }
+
     public void SaveBooking(Booking booking)
     {
-        booking.BookingId = GenerateNumericId().ToString();
+        booking.BookingId = _bookings.Count.ToString();
         _bookings.Add(booking);
         SaveToCsv(booking);
     }
@@ -25,55 +26,64 @@ public class BookingRepository
         File.AppendAllText(_filePath, line + Environment.NewLine);
     }
 
-    private int GenerateNumericId()
+    public List<Booking> LoadBookings(string filePath)
     {
-        int maxId = 0;
-
-        if (File.Exists(_filePath))
+        if (!File.Exists(filePath))
         {
-            var lines = File.ReadAllLines(_filePath);
-            foreach (var line in lines)
-            {
-                var parts = line.Split(',');
-                if (parts.Length > 0 && int.TryParse(parts[0], out int id))
-                {
-                    if (id > maxId)
-                        maxId = id;
-                }
-            }
-        }
-
-        return maxId + 1;
-    }
-
-    public List<Booking> GetAll()
-    {
-        if (!File.Exists(_filePath))
-        {
-            Console.WriteLine(_filePath);
-            Console.WriteLine("Warning: Booking file not found.");
+            Console.WriteLine("File not found");
             return [];
         }
-        
-        return File.ReadAllLines(_filePath)
-            .Select(ParseBooking)
-            .Where(b => b != null)
-            .ToList()!;
-    }
-    private Booking? ParseBooking(string line)
-    {
-        var parts = line.Split(',');
-        if (parts.Length < 5) return null;
-        if (!double.TryParse(parts[4], out var price))
-            return null;
-
-        return new Booking
+        var lines = File.ReadAllLines(filePath);
+        foreach (var line in lines)
         {
-            BookingId = parts[0],
-            PassengerId = parts[1],
-            FlightId = parts[2],
-            Class = Enum.Parse<FlightClass>(parts[3]),
-            Price = price
-        };
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+            var parts = line.Split(',');
+            if (parts.Length < 5)
+            {
+                Console.WriteLine("Invalid File Fprmat");
+                continue;
+            }
+            if (!Enum.TryParse(parts[3], out FlightClass classType))
+            {
+                Console.WriteLine($"Invalid class type {parts[3]}");
+                continue;
+            }
+            if (!double.TryParse(parts[4], out var price))
+            {
+                Console.WriteLine($"Invalid price {parts[4]}");
+                continue;
+            }
+            var booking = new Booking
+            {
+                BookingId = parts[0],
+                PassengerId = parts[1],
+                FlightId = parts[2],
+                Class = classType,
+                Price = price
+            };
+
+            _bookings.Add(booking);
+        }
+
+        return _bookings;
+    }
+    public List<Booking> GetAllBookings => _bookings;
+    public List<Booking> FilterBookings(BookingsFilter bookingsFilter, List<Flight> flights)
+    {
+        var result = from booking in _bookings
+                 join flight in flights on booking.FlightId equals flight.Id
+                 where (string.IsNullOrEmpty(bookingsFilter.FlightId) || booking.FlightId == bookingsFilter.FlightId)
+                       && (!bookingsFilter.Price.HasValue || booking.Price == bookingsFilter.Price.Value)
+                       && (string.IsNullOrEmpty(bookingsFilter.DepartureCountry) || flight.DepartureCountry == bookingsFilter.DepartureCountry)
+                       && (string.IsNullOrEmpty(bookingsFilter.DestinationCountry) || flight.DestinationCountry == bookingsFilter.DestinationCountry)
+                       && (!bookingsFilter.DepartureDate.HasValue || flight.DepartureDate.Date == bookingsFilter.DepartureDate.Value.Date)
+                       && (string.IsNullOrEmpty(bookingsFilter.DepartureAirport) || flight.DepartureAirport == bookingsFilter.DepartureAirport)
+                       && (string.IsNullOrEmpty(bookingsFilter.ArrivalAirport) || flight.ArrivalAirport == bookingsFilter.ArrivalAirport)
+                       && (string.IsNullOrEmpty(bookingsFilter.PassengerId) || booking.PassengerId == bookingsFilter.PassengerId)
+                       && (!bookingsFilter.FlightClass.HasValue || booking.Class == bookingsFilter.FlightClass)
+                 select booking;
+
+        return result.ToList();
     }
 }
