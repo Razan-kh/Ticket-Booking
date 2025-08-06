@@ -5,11 +5,16 @@ using System.Globalization;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
 
-public class FlightUI
+public class SearchFlight
 {
-    public required FlightService Service;
+    private readonly FlightService _flightService;
 
-    public void Run()
+    public SearchFlight(FlightService flightService)
+    {
+        _flightService = flightService;
+    }
+
+    public void Search()
     {
         Console.WriteLine("=== Search Flights ===");
 
@@ -22,9 +27,17 @@ public class FlightUI
 
         FlightClass? selectedClass = PromptFlightClass("Flight Class (Economy/Business/FirstClass)");
         double? maxPrice = PromptDouble("Max Price");
-
-        var results = Service.SearchFlights(depCountry, destCountry, depDate, depAirport, arrAirport, maxPrice, selectedClass);
-
+        FlightFilter flightFilter = new ()
+        {
+            DepartureCountry = depCountry,
+            ArrivalAirport = arrAirport,
+            ClassType = selectedClass,
+            DepartureAirport = depAirport,
+            DepartureDate = depDate,
+            DestinationCountry = destCountry,
+            MaxPrice = maxPrice
+        };
+        var results = _flightService.SearchFlights(flightFilter);
         DisplayFlights(results, selectedClass);
     }
 
@@ -70,13 +83,11 @@ public class FlightUI
     private static void DisplayFlights(List<Flight> flights, FlightClass? selectedClass)
     {
         Console.WriteLine("\n--- Available Flights ---");
-
         if (flights.Count == 0)
         {
             Console.WriteLine("No flights found.");
             return;
         }
-
         foreach (var flight in flights)
         {
             Console.WriteLine(flight);
@@ -85,7 +96,6 @@ public class FlightUI
             {
                 Console.WriteLine($"Class: {selectedClass} | Price: {flight.Prices[selectedClass.Value]} | Seats: {flight.AvailableSeats[selectedClass.Value]}");
             }
-
             Console.WriteLine("--------------------------------------------------");
         }
     }

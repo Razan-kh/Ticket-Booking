@@ -6,51 +6,73 @@ namespace Ticket_Booking.Repository;
 public class BookingRepository
 {
     private List<Booking> _bookings = [];
-    public required string FilePath{ init; get; }
+    private readonly string _filePath;
 
+    public BookingRepository(string filePath)
+    {
+        _filePath = filePath;
+        _bookings = LoadBookings(_filePath);
+    }
     public void SaveBooking(Booking booking)
     {
-        booking.BookingId = GenerateNumericId().ToString();
+        booking.BookingId = _bookings.Count.ToString();
         _bookings.Add(booking);
         SaveToCsv(booking);
     }
 
-    private static void SaveToCsv(Booking booking)
+    private void SaveToCsv(Booking booking)
     {
         var line = $"{booking.BookingId},{booking.PassengerId},{booking.FlightId},{booking.Class},{booking.Price}";
-        File.AppendAllText("Files/Bookings.csv", line + Environment.NewLine);
+        File.AppendAllText(_filePath, line + Environment.NewLine);
     }
 
-    private int GenerateNumericId()
+    public List<Booking> LoadBookings(string filePath)
     {
-        int maxId = 0;
-        if (File.Exists(FilePath))
+        if (!File.Exists(filePath))
         {
-            var lines = File.ReadAllLines(FilePath);
-            foreach (var line in lines)
-            {
-                var parts = line.Split(',');
-                if (parts.Length > 0 && int.TryParse(parts[0], out int id))
-                {
-                    if (id > maxId)
-                        maxId = id;
-                }
-            }
+            Console.WriteLine("File not found");
+            return [];
         }
+        var lines = File.ReadAllLines(filePath);
 
-        return maxId + 1;
+        foreach (var line in lines)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+            var parts = line.Split(',');
+            if (parts.Length < 5)
+                throw new FormatException($"Invalid booking record: {line}");
+
+            if (!Enum.TryParse(parts[3], out FlightClass classType))
+                throw new FormatException($"Invalid class type in booking: {parts[3]}");
+
+            if (!double.TryParse(parts[4], out var price))
+                throw new FormatException($"Invalid price in booking: {parts[4]}");
+
+            var booking = new Booking
+            {
+                BookingId = parts[0],
+                PassengerId = parts[1],
+                FlightId = parts[2],
+                Class = classType,
+                Price = price
+            };
+
+            _bookings.Add(booking);
+        }
+        return _bookings;
     }
     public void Delete(string bookingId)
     {
         var bookings = GetAll().Where(b => b.BookingId != bookingId).ToList();
-        File.WriteAllLines(FilePath, bookings.Select(SerializeBooking));
+        File.WriteAllLines(_filePath, bookings.Select(SerializeBooking));
     }
     public List<Booking> GetAll()
     {
-        if (!File.Exists(FilePath))
+        if (!File.Exists(_filePath))
             throw new FileNotFoundException("Booking file not found.");
 
-        return File.ReadAllLines(FilePath)
+        return File.ReadAllLines(_filePath)
             .Select(ParseBooking)
             .Where(b => b != null)
             .ToList()!;

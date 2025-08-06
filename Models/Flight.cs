@@ -13,11 +13,8 @@ public class Flight
 
     public override string ToString()
     {
-        
         return $"ID: {Id} | {DepartureCountry} ➡ {DestinationCountry} on {DepartureDate:yyyy-MM-dd}\n" +
             $"Airport: {DepartureAirport} ➝ {ArrivalAirport}";
-
-
     }
-    }
+}
 

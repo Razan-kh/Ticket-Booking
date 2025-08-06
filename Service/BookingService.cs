@@ -4,12 +4,17 @@ using Ticket_Booking.Repository;
 
 public class BookingService
 {
-    public required FlightRepository FlightRepo { init; get; }
-    public required BookingRepository BookingRepo { init; get; }
+    private readonly FlightRepository _flightRepo;
+    private readonly BookingRepository _bookingRepo;
 
+    public BookingService(FlightRepository flightRepository, BookingRepository bookingRepository)
+    {
+        _bookingRepo = bookingRepository;
+        _flightRepo = flightRepository;
+    }
     public void BookFlight(string passengerId, string flightId, FlightClass selectedClass)
-    {  
-        var flight = FlightRepo.GetFlightById(flightId) ?? throw new Exception("Flight not found");
+    {
+        var flight = _flightRepo.GetFlightById(flightId) ?? throw new Exception("Flight not found");
         if (!flight.AvailableSeats.TryGetValue(selectedClass, out int value) || value <= 0)
         {
             Console.WriteLine("No available seats");
@@ -27,15 +32,15 @@ public class BookingService
             Price = price
         };
 
-        BookingRepo.SaveBooking(booking);
-        FlightRepo.UpdateFlight(flight);
+        _bookingRepo.SaveBooking(booking);
+        _flightRepo.UpdateFlight(flight);
     }
     public void CancelBooking(string bookingId)
     {
-        var booking = BookingRepo.GetById(bookingId);
+        var booking = _bookingRepo.GetById(bookingId);
         if (booking == null)
             throw new Exception("Booking not found.");
 
-        BookingRepo.Delete(bookingId);
+        _bookingRepo.Delete(bookingId);
     }
 }
