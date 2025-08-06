@@ -28,8 +28,8 @@ class MainClass
                             ui.Run();
                             break;
                         case PassengerOptions.AddBooking:
-                            BookingUI bookingUI = new() { FlightService = flightService, BookingService = bookingService };
-                            bookingUI.Run();
+                            AddBookingUI bookingUI = new() { FlightService = flightService, BookingService = bookingService };
+                            bookingUI.BookFlight();
                             break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
