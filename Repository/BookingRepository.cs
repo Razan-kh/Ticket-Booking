@@ -33,7 +33,7 @@ public class BookingRepository
             Console.WriteLine("File not found");
             return [];
         }
-        var lines = File.ReadAllLines(filePath);
+        var lines = File.ReadAllLines(filePath).Skip(1);
 
         foreach (var line in lines)
         {
