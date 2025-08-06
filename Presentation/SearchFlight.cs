@@ -5,16 +5,11 @@ using System.Globalization;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
 
-public class FlightUI
+public class SearchFlight
 {
-    private readonly FlightService _service;
+    public required FlightService Service { get; init; }
 
-    public FlightUI(FlightService service)
-    {
-        _service = service;
-    }
-
-    public void Run()
+    public void Search()
     {
         Console.WriteLine("=== Search Flights ===");
 
@@ -27,9 +22,17 @@ public class FlightUI
 
         FlightClass? selectedClass = PromptFlightClass("Flight Class (Economy/Business/FirstClass)");
         double? maxPrice = PromptDouble("Max Price");
-
-        var results = _service.SearchFlights(depCountry, destCountry, depDate, depAirport, arrAirport, maxPrice, selectedClass);
-
+        FlightFilter flightFilter = new ()
+        {
+            DepartureCountry = depCountry,
+            ArrivalAirport = arrAirport,
+            ClassType = selectedClass,
+            DepartureAirport = depAirport,
+            DepartureDate = depDate,
+            DestinationCountry = destCountry,
+            MaxPrice = maxPrice
+        };
+        var results = Service.SearchFlights(flightFilter);
         DisplayFlights(results, selectedClass);
     }
 
@@ -75,13 +78,11 @@ public class FlightUI
     private static void DisplayFlights(List<Flight> flights, FlightClass? selectedClass)
     {
         Console.WriteLine("\n--- Available Flights ---");
-
         if (flights.Count == 0)
         {
             Console.WriteLine("No flights found.");
             return;
         }
-
         foreach (var flight in flights)
         {
             Console.WriteLine(flight);
@@ -90,7 +91,6 @@ public class FlightUI
             {
                 Console.WriteLine($"Class: {selectedClass} | Price: {flight.Prices[selectedClass.Value]} | Seats: {flight.AvailableSeats[selectedClass.Value]}");
             }
-
             Console.WriteLine("--------------------------------------------------");
         }
     }

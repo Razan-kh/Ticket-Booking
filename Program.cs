@@ -10,7 +10,7 @@ class MainClass
     {
         string flightsFile = "Files/Flights.csv";
         var flightRepo = new FlightRepository(flightsFile);
-        var flightService = new FlightService(flightRepo);
+        var flightService = new FlightService { Repository = flightRepo };
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -21,8 +21,8 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new (flightService);
-                            ui.Run();
+                            SearchFlight ui = new SearchFlight{ Service = flightService };
+                            ui.Search();
                             break;
 
                         default:
