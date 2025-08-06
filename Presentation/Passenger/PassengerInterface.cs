@@ -4,7 +4,7 @@ class PassengerInterface
 {
     public static PassengerOptions PrintPassengerMenu()
     {
-      while (true)
+        while (true)
         {
             Console.WriteLine("=== Main Menu ===");
             Console.WriteLine(@"1. Search for Available Flights

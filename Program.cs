@@ -9,7 +9,7 @@ class MainClass
     public static void Main()
     {
         string flightsFile = "Files/Flights.csv";
-        string bookingFile = "Files/Flights.csv";
+        string bookingFile = "Files/Bookings.csv";
         var flightRepo = new FlightRepository(flightsFile);
         var flightService = new FlightService (flightRepo);
         var bookingRepo = new BookingRepository (bookingFile);
@@ -24,8 +24,8 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new(flightService);
-                            ui.Run();
+                            SearchFlight searchFlight = new(flightService);
+                            searchFlight.Search();
                             break;
                         case PassengerOptions.AddBooking:
                             AddBookingUI bookingUI = new(flightService, bookingService);
