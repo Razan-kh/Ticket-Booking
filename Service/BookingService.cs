@@ -37,11 +37,17 @@ public class BookingService
     {
         var booking = _bookingRepo.GetById(bookingId);
         if (booking == null)
-            throw new Exception("Booking not found.");
+        {
+            Console.WriteLine("Booking does not exist");
+            return;
+        }
 
-        var newFlight = _flightRepo.GetAllFlights().FirstOrDefault(f => f.Id == newFlightId);
+        var newFlight = _flightRepo.GetFlightById(newFlightId);
         if (newFlight == null)
-            throw new Exception("New flight not found.");
+        {
+            Console.WriteLine("Flight does not exist");
+            return;
+        }
 
         booking.FlightId = newFlightId;
         booking.Class = newClass;
