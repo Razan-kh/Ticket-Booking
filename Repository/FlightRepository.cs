@@ -16,8 +16,6 @@ public class FlightRepository
         _filePath = filePath;
         _flights = ParseFile(_filePath);
     }
-
-    public List<Flight> GetAllFlights => _flights;
     
     public List<Flight> SearchFlights(FlightFilter filter)
     {
