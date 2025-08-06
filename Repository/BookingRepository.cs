@@ -6,7 +6,7 @@ public class BookingRepository
 {
     private List<Booking> _bookings = [];
     private readonly string _filePath;
-    
+
     public BookingRepository(string filePath)
     {
         _filePath = filePath;
@@ -25,12 +25,13 @@ public class BookingRepository
         File.AppendAllText(_filePath, line + Environment.NewLine);
     }
 
-    public static List<Booking> LoadBookings(string filePath)
+    public List<Booking> LoadBookings(string filePath)
     {
-        var bookings = new List<Booking>();
-
         if (!File.Exists(filePath))
-            throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
+        {
+            Console.WriteLine("File not found");
+            return [];
+        }
         var lines = File.ReadAllLines(filePath);
 
         foreach (var line in lines)
@@ -58,8 +59,8 @@ public class BookingRepository
                 Price = price
             };
 
-            bookings.Add(booking);
+            _bookings.Add(booking);
         }
-        return bookings;
+        return _bookings;
     }
 }

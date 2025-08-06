@@ -18,8 +18,5 @@ public class FlightService
     }
 
     public Flight? GetFlightById(string flightId)
-    {
-        Flight? flight=_flightRepository.GetFlightById(flightId);
-        return flight;
-    }
+    =>_flightRepository.GetFlightById(flightId);
 }

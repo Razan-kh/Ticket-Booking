@@ -17,8 +17,7 @@ public class FlightRepository
         _flights = ParseFile(_filePath);
     }
 
-    public List<Flight> GetAllFlights
-       => _flights;
+    public List<Flight> GetAllFlights => _flights;
     
     public List<Flight> SearchFlights(FlightFilter filter)
     {
@@ -90,7 +89,7 @@ public class FlightRepository
     }
 
     public Flight? GetFlightById(string flightId)
-    => _flights.FirstOrDefault(f => f.Id == flightId);
+     => _flights.FirstOrDefault(f => f.Id == flightId);
 
     public void UpdateFlight(Flight updatedFlight)
     {
@@ -113,5 +112,4 @@ public class FlightRepository
                 $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
         }
     }
-
 }

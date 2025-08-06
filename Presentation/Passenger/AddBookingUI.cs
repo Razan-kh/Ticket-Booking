@@ -59,7 +59,7 @@ public class AddBookingUI
         return flight;
     }
 
-    private void DisplayAvailableClasses(Flight flight)
+    private static void DisplayAvailableClasses(Flight flight)
     {
         Console.WriteLine("Available Classes:");
         foreach (var kvp in flight.AvailableSeats)
@@ -68,7 +68,7 @@ public class AddBookingUI
         }
     }
 
-    private bool TryGetFlightClass(out FlightClass selectedClass)
+    private static bool TryGetFlightClass(out FlightClass selectedClass)
     {
         Console.Write("Select class to book (Economy/Business/FirstClass): ");
         var inputClass = Console.ReadLine();

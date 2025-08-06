@@ -14,7 +14,6 @@ public class SearchFlight
         _flightService = flightService;
     }
 
-
     public void Search()
     {
         Console.WriteLine("=== Search Flights ===");
