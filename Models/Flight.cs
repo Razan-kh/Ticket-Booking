@@ -29,11 +29,11 @@ public class Flight
 
     [Required]
     public required Dictionary<FlightClass, double> Prices { get; set; }
-
-public override string ToString()
-{
-    return $"ID: {Id} | {DepartureCountry} ➡ {DestinationCountry} on {DepartureDate:yyyy-MM-dd}\n" +
-        $"Airport: {DepartureAirport} ➝ {ArrivalAirport}";
-}
+    
+    public override string ToString()
+    {
+        return $"ID: {Id} | {DepartureCountry} ➡ {DestinationCountry} on {DepartureDate:yyyy-MM-dd}\n" +
+            $"Airport: {DepartureAirport} ➝ {ArrivalAirport}";
+    }
 }
 
