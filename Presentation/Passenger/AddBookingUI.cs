@@ -4,57 +4,92 @@ using System;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
 
-public class BookingUI
+public class AddBookingUI
 {
     private readonly FlightService _flightService;
     private readonly BookingService _bookingService;
 
-    public BookingUI(FlightService flightService, BookingService bookingService)
+    public AddBookingUI(FlightService flightService, BookingService bookingService)
     {
         _flightService = flightService;
         _bookingService = bookingService;
     }
-
-    public void Run()
+    public void BookFlight()
     {
         Console.WriteLine("=== Book a Flight ===");
+        string flightId = PromptFlight();
+        Flight? flight = ValidateFlight(flightId);
+        if (flight is null) return;
+        DisplayAvailableClasses(flight);
+        if (!TryGetFlightClass(out var selectedClass)) return;
 
-        Console.Write("Enter Flight ID: ");
-        string? flightId = Console.ReadLine();
-        if (string.IsNullOrWhiteSpace(flightId))
+        string? passengerId = PromptPassengerId();
+        if (passengerId is null) return;
+
+        if (string.IsNullOrEmpty(passengerId))
+        {
+            Console.WriteLine("Invalid Passenger Id");
+            return;
+        }
+        _bookingService.BookFlight(passengerId, flightId, selectedClass);
+    }
+    public static string PromptFlight()
+    {
+        string? flightId;
+        while (true)
+        {
+            Console.Write("Enter Flight ID: ");
+            flightId = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(flightId))
             {
-                Console.WriteLine("Flight ID cannot be empty.");
-                return;
+                return flightId;
             }
+            Console.WriteLine("Flight ID cannot be empty.");
+        }
+    }
+    private Flight? ValidateFlight(string flightId)
+    {
         var flight = _flightService.GetFlightById(flightId);
-
         if (flight is null)
         {
             Console.WriteLine("Flight not found.");
-            return;
+            return null;
         }
+        
+        return flight;
+    }
 
+    private static void DisplayAvailableClasses(Flight flight)
+    {
         Console.WriteLine("Available Classes:");
         foreach (var kvp in flight.AvailableSeats)
         {
             Console.WriteLine($"{kvp.Key} - {kvp.Value} seats | Price: {flight.Prices[kvp.Key]}");
         }
+    }
 
+    private static bool TryGetFlightClass(out FlightClass selectedClass)
+    {
         Console.Write("Select class to book (Economy/Business/FirstClass): ");
-        string? inputClass = Console.ReadLine();
+        var inputClass = Console.ReadLine();
 
-        if (!Enum.TryParse(inputClass, out FlightClass selectedClass))
+        if (!Enum.TryParse(inputClass, out selectedClass))
         {
             Console.WriteLine("Invalid class selection.");
-            return;
+            return false;
         }
+        return true;
+    }
+
+    private static string? PromptPassengerId()
+    {
         Console.Write("Enter your Passenger ID: ");
-        string? passengerId = Console.ReadLine();
+        var passengerId = Console.ReadLine();
         if (string.IsNullOrEmpty(passengerId))
         {
-             Console.WriteLine("Invalid Passenger Id");
-            return;
+            Console.WriteLine("Invalid Passenger ID.");
+            return null;
         }
-         _bookingService.BookFlight(passengerId,flightId, selectedClass);
+        return passengerId;
     }
 }

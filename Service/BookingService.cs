@@ -7,17 +7,19 @@ public class BookingService
     private readonly FlightRepository _flightRepo;
     private readonly BookingRepository _bookingRepo;
 
-    public BookingService(FlightRepository flightRepo, BookingRepository bookingRepo)
+    public BookingService(FlightRepository flightRepository, BookingRepository bookingRepository)
     {
-        _flightRepo = flightRepo;
-        _bookingRepo = bookingRepo;
+        _bookingRepo = bookingRepository;
+        _flightRepo = flightRepository;
     }
-
     public void BookFlight(string passengerId, string flightId, FlightClass selectedClass)
     {
         var flight = _flightRepo.GetFlightById(flightId) ?? throw new Exception("Flight not found");
         if (!flight.AvailableSeats.TryGetValue(selectedClass, out int value) || value <= 0)
-            throw new Exception("No available seats for this class");
+        {
+            Console.WriteLine("No available seats");
+            return;
+        }
         flight.AvailableSeats[selectedClass] = --value;
 
         var price = flight.Prices[selectedClass];

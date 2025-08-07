@@ -10,9 +10,9 @@ class MainClass
         string flightsFile = "Files/Flights.csv";
         string bookingFile = "Files/Bookings.csv";
         var flightRepo = new FlightRepository(flightsFile);
-        var flightService = new FlightService(flightRepo);
-        var bookingRepo = new BookingRepository(bookingFile);
-        var bookingService = new BookingService(flightRepo,bookingRepo);
+        var flightService = new FlightService (flightRepo);
+        var bookingRepo = new BookingRepository (bookingFile);
+        var bookingService = new BookingService(flightRepo, bookingRepo);
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -23,12 +23,12 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new (flightService);
-                            ui.Run();
+                            SearchFlight searchFlight = new(flightService);
+                            searchFlight.Search();
                             break;
                         case PassengerOptions.AddBooking:
-                            BookingUI bookingUI = new BookingUI(flightService, bookingService);
-                            bookingUI.Run();
+                            AddBookingUI bookingUI = new(flightService, bookingService);
+                            bookingUI.BookFlight();
                             break;
                         case PassengerOptions.PersonalBookings:
                             Console.WriteLine("Enter Your Id");
@@ -48,6 +48,5 @@ class MainClass
                     break;
             }
         }
-
     }
 }
