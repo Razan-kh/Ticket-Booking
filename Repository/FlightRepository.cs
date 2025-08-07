@@ -16,15 +16,30 @@ public class FlightRepository
     public FlightRepository(string filePath)
     {
         _filePath = filePath;
+        _flights = ParseFile(_filePath);
     }
-    public List<Flight> GetAllFlights()
+    
+    public List<Flight> SearchFlights(FlightFilter filter)
     {
-        var flights = new List<Flight>();
+        return _flights.Where(f =>
+            (string.IsNullOrEmpty(filter.DepartureCountry) || f.DepartureCountry.Equals(filter.DepartureCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(filter.DestinationCountry) || f.DestinationCountry.Equals(filter.DestinationCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (!filter.DepartureDate.HasValue || f.DepartureDate.Date == filter.DepartureDate.Value.Date) &&
+            (string.IsNullOrEmpty(filter.DepartureAirport) || f.DepartureAirport.Equals(filter.DepartureAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(filter.ArrivalAirport) || f.ArrivalAirport.Equals(filter.ArrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (!filter.MaxPrice.HasValue ||
+                (filter.ClassType.HasValue &&
+                f.Prices.ContainsKey(filter.ClassType.Value) &&
+                f.Prices[filter.ClassType.Value] <= filter.MaxPrice.Value))
+        ).ToList();
+    }
 
-        if (!File.Exists(_filePath))
-            throw new FileNotFoundException($"The file at path '{_filePath}' was not found.");
+    public List<Flight> ParseFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
 
-        var lines = File.ReadAllLines(_filePath);
+        var lines = File.ReadAllLines(filePath).Skip(1);
 
         foreach (var line in lines)
         {
@@ -66,9 +81,36 @@ public class FlightRepository
                     { FlightClass.FirstClass, priceFirst }
                 }
             };
-            flights.Add(flight);
+
+            _flights.Add(flight);
         }
-        return flights;
+
+        return _flights;
+    }
+
+    public Flight? GetFlightById(string flightId)
+     => _flights.FirstOrDefault(f => f.Id == flightId);
+
+    public void UpdateFlight(Flight updatedFlight)
+    {
+        var index = _flights.FindIndex(f => f.Id == updatedFlight.Id);
+        if (index != -1)
+        {
+            _flights[index] = updatedFlight;
+            SaveFlightsToCsv(_flights, "Files/Flights.csv");
+        }
+    }
+    private static void SaveFlightsToCsv(List<Flight> flights, string path)
+    {
+        using var writer = new StreamWriter(path);
+        writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
+
+        foreach (var flight in flights)
+        {
+            writer.WriteLine($"{flight.Id},{flight.DepartureCountry},{flight.DestinationCountry},{flight.DepartureDate.ToString("yyyy-MM-dd")},{flight.DepartureAirport},{flight.ArrivalAirport}," +
+                $"{flight.AvailableSeats[FlightClass.Economy]},{flight.AvailableSeats[FlightClass.Business]},{flight.AvailableSeats[FlightClass.FirstClass]}," +
+                $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
+        }
     }
     public List<string> ReadFlightsFromCsv(string filePath)
     {

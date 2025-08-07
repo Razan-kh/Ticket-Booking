@@ -5,16 +5,16 @@ using System.Globalization;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
 
-public class FlightUI
+public class SearchFlight
 {
-    private readonly FlightService _service;
+    private readonly FlightService _flightService;
 
-    public FlightUI(FlightService service)
+    public SearchFlight(FlightService flightService)
     {
-        _service = service;
+        _flightService = flightService;
     }
 
-    public void Run()
+    public void Search()
     {
         Console.WriteLine("=== Search Flights ===");
 
@@ -27,9 +27,17 @@ public class FlightUI
 
         FlightClass? selectedClass = PromptFlightClass("Flight Class (Economy/Business/FirstClass)");
         double? maxPrice = PromptDouble("Max Price");
-
-        var results = _service.SearchFlights(depCountry, destCountry, depDate, depAirport, arrAirport, maxPrice, selectedClass);
-
+        FlightFilter flightFilter = new ()
+        {
+            DepartureCountry = depCountry,
+            ArrivalAirport = arrAirport,
+            ClassType = selectedClass,
+            DepartureAirport = depAirport,
+            DepartureDate = depDate,
+            DestinationCountry = destCountry,
+            MaxPrice = maxPrice
+        };
+        var results = _flightService.SearchFlights(flightFilter);
         DisplayFlights(results, selectedClass);
     }
 
@@ -61,7 +69,7 @@ public class FlightUI
         return null;
     }
 
-    private FlightClass? PromptFlightClass(string label)
+    private static FlightClass? PromptFlightClass(string label)
     {
         Console.Write($"{label}: ");
         string? input = Console.ReadLine();
@@ -75,23 +83,19 @@ public class FlightUI
     private static void DisplayFlights(List<Flight> flights, FlightClass? selectedClass)
     {
         Console.WriteLine("\n--- Available Flights ---");
-
         if (flights.Count == 0)
         {
             Console.WriteLine("No flights found.");
             return;
         }
-
         foreach (var flight in flights)
         {
-            Console.WriteLine($"ID: {flight.Id} | {flight.DepartureCountry} ➡ {flight.DestinationCountry} on {flight.DepartureDate:yyyy-MM-dd}");
-            Console.WriteLine($"Airport: {flight.DepartureAirport} ➝ {flight.ArrivalAirport}");
+            Console.WriteLine(flight);
 
             if (selectedClass.HasValue)
             {
                 Console.WriteLine($"Class: {selectedClass} | Price: {flight.Prices[selectedClass.Value]} | Seats: {flight.AvailableSeats[selectedClass.Value]}");
             }
-
             Console.WriteLine("--------------------------------------------------");
         }
     }
