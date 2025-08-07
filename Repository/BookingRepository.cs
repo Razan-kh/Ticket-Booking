@@ -85,5 +85,5 @@ public class BookingRepository
         };
     }
     public List<Booking> GetByPassengerId(string passengerId) =>
-        GetAll().Where(b => b.PassengerId == passengerId).ToList();
+        _bookings.Where(b => b.PassengerId == passengerId).ToList();
 }
