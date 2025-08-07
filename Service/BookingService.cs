@@ -43,7 +43,6 @@ public class BookingService
             Console.WriteLine("Booking id is wrong");
             return;  
         }
-
         _bookingRepo.Delete(bookingId);
     }
 }
