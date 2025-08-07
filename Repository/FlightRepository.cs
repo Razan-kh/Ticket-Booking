@@ -184,7 +184,7 @@ public class FlightRepository
             };
 
             var validation = ValidateFlight(flight);
-            if (validation.Any())
+            if (validation.Count !=0)
                 errors.Add($"Line {lineNum}: {string.Join(", ", validation)}");
             else
                 _flights.Add(flight);
