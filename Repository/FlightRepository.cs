@@ -22,9 +22,7 @@ public class FlightRepository
 
         if (!File.Exists(_filePath))
             throw new FileNotFoundException($"The file at path '{_filePath}' was not found.");
-
         var lines = File.ReadAllLines(_filePath);
-
         foreach (var line in lines)
         {
             var parts = line.Split(',');
@@ -85,21 +83,18 @@ public class FlightRepository
         foreach (var line in lines) 
         {
             var parts = line.Split(',');
-
             if (parts.Length < 12)
             {
                 errors.Add($"Line {lineNum}: Not enough data.");
                 lineNum++;
                 continue;
             }
-
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
             {
                 errors.Add($"Line {lineNum}: Invalid date format: {parts[3]}");
                 lineNum++;
                 continue;
             }
-
             if (!int.TryParse(parts[6], out var seatsEconomy) ||
                 !int.TryParse(parts[7], out var seatsBusiness) ||
                 !int.TryParse(parts[8], out var seatsFirst))
@@ -141,11 +136,10 @@ public class FlightRepository
             };
 
             var validation = ValidateFlight(flight);
-            if (validation.Any())
+            if (validation.Count != 0)
                 errors.Add($"Line {lineNum}: {string.Join(", ", validation)}");
             else
                 _flights.Add(flight);
-
             lineNum++;
         }
 

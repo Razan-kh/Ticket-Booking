@@ -31,5 +31,4 @@ public class FlightService
         var errors = _repository.ReadFlightsFromCsv(filePath);
         return errors;
     }
-
 }
