@@ -36,9 +36,7 @@ public class FlightRepository
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
-
         var lines = File.ReadAllLines(filePath).Skip(1);
-
         foreach (var line in lines)
         {
             var parts = line.Split(',');

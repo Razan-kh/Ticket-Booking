@@ -35,8 +35,7 @@ public class BookingService
         _bookingRepo.SaveBooking(booking);
         _flightRepo.UpdateFlight(flight);
     }
-        public List<Booking> GetBookingsForPassenger(string passengerId)
-    {
-        return _bookingRepo.GetByPassengerId(passengerId);
-    }
+    public List<Booking> GetBookingsForPassenger(string passengerId)
+    => _bookingRepo.GetByPassengerId(passengerId);
+
 }

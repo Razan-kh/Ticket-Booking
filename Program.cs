@@ -31,13 +31,7 @@ class MainClass
                             bookingUI.BookFlight();
                             break;
                         case PassengerOptions.PersonalBookings:
-                            Console.WriteLine("Enter Your Id");
-                            var passengerId = Console.ReadLine();
-                            if(string.IsNullOrEmpty(passengerId))
-                                Console.WriteLine("Please enter a valid Id");
-                            var bookings = bookingService.GetBookingsForPassenger(passengerId!);
-                            foreach (var b in bookings)
-                                Console.WriteLine(b);
+                            PassengerInterface.PersonalBookings(bookingService);
                             break;    
                         default:
                             Console.WriteLine("Invalid passenger option.");

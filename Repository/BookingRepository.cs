@@ -13,6 +13,7 @@ public class BookingRepository
         _filePath = filePath;
         _bookings = LoadBookings(_filePath);
     }
+
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = _bookings.Count.ToString();
@@ -39,9 +40,7 @@ public class BookingRepository
         {
             if (string.IsNullOrWhiteSpace(line))
                 continue;
-
             var parts = line.Split(',');
-
             if (parts.Length < 5)
                 throw new FormatException($"Invalid booking record: {line}");
 
@@ -66,16 +65,8 @@ public class BookingRepository
     }
     public Booking? GetById(string bookingId) =>
         GetAll().FirstOrDefault(b => b.BookingId == bookingId);
-    public List<Booking> GetAll()
-    {
-        if (!File.Exists(_filePath))
-            throw new FileNotFoundException("Booking file not found.");
 
-        return File.ReadAllLines(_filePath)
-            .Select(ParseBooking)
-            .Where(b => b != null)
-            .ToList()!;
-    }
+    public List<Booking> GetAll() => _bookings;
 
     private Booking? ParseBooking(string line)
     {
