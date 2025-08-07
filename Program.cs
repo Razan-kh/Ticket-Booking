@@ -9,8 +9,11 @@ class MainClass
     public static void Main()
     {
         string flightsFile = "Files/Flights.csv";
+        string bookingFile = "Files/Bookings.csv";
         var flightRepo = new FlightRepository(flightsFile);
-        var flightService = new FlightService(flightRepo);
+        var flightService = new FlightService (flightRepo);
+        var bookingRepo = new BookingRepository (bookingFile);
+        var bookingService = new BookingService(flightRepo, bookingRepo);
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -21,10 +24,13 @@ class MainClass
                     switch (option)
                     {
                         case PassengerOptions.Search:
-                            FlightUI ui = new (flightService);
-                            ui.Run();
+                            SearchFlight searchFlight = new(flightService);
+                            searchFlight.Search();
                             break;
-
+                        case PassengerOptions.AddBooking:
+                            AddBookingUI bookingUI = new(flightService, bookingService);
+                            bookingUI.BookFlight();
+                            break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
                             break;
@@ -35,20 +41,7 @@ class MainClass
                     switch (ManagerOption)
                     {
                         case ManagerOptions.UploadUpdate:
-                            Console.Write("Enter path to the flight CSV file: ");
-                            string? csvPath = Console.ReadLine();
-                            if (string.IsNullOrEmpty(csvPath))
-                            {
-                                Console.WriteLine("Invalid Name");
-                                continue;
-                            }
-                            var errors = flightService.BatchUploadFlights(csvPath);
-                            if (errors.Count != 0)
-                            {
-                                Console.WriteLine("Validation Errors:");
-                                foreach (var err in errors)
-                                    Console.WriteLine(err);
-                            }
+                            ManagerInterface.UploadFile(flightService);
                             break; 
 
                     }
