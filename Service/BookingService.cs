@@ -37,5 +37,4 @@ public class BookingService
     }
     public List<Booking> GetBookingsForPassenger(string passengerId)
     => _bookingRepo.GetByPassengerId(passengerId);
-
 }
