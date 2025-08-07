@@ -22,6 +22,7 @@ public class FlightService
         var errors = _flightRepository.ReadFlightsFromCsv(filePath);
         return errors;
     }
+    
     public Flight? GetFlightById(string flightId)
-    =>_flightRepository.GetFlightById(flightId);
+    => _flightRepository.GetFlightById(flightId);
 }

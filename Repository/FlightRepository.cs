@@ -99,6 +99,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, "Files/Flights.csv");
         }
     }
+
     private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);
@@ -111,6 +112,7 @@ public class FlightRepository
                 $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
         }
     }
+    
     public List<string> ReadFlightsFromCsv(string filePath)
     {
         var errors = new List<string>();
@@ -120,11 +122,9 @@ public class FlightRepository
             errors.Add("File not found.");
             return errors;
         }
-
         var lines = File.ReadAllLines(filePath).Skip(1);
-        int lineNum = 1; 
-
-        foreach (var line in lines) 
+        int lineNum = 1;
+        foreach (var line in lines)
         {
             var parts = line.Split(',');
             if (parts.Length < 12)

@@ -5,7 +5,7 @@ using Ticket_Booking.Repository;
 
 class ManagerInterface
 {
-    public static ManagerOptions PrintPassengerMenu()
+    public static ManagerOptions PrintManagerMenu()
     {
         while (true)
         {

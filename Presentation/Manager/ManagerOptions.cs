@@ -2,5 +2,5 @@ namespace Ticket_Booking.Presentation;
 
 enum ManagerOptions
 {
-UploadUpdate = 1,
+    UploadUpdate = 1,
 }

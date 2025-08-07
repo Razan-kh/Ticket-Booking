@@ -37,7 +37,7 @@ class MainClass
                     }
                     break;
                 case MainMenuOptions.Manager:
-                    ManagerOptions ManagerOption = ManagerInterface.PrintPassengerMenu();
+                    ManagerOptions ManagerOption = ManagerInterface.PrintManagerMenu();
                     switch (ManagerOption)
                     {
                         case ManagerOptions.UploadUpdate:
