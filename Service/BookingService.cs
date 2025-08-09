@@ -12,6 +12,7 @@ public class BookingService
         _bookingRepo = bookingRepository;
         _flightRepo = flightRepository;
     }
+    
     public void BookFlight(string passengerId, string flightId, FlightClass selectedClass)
     {
         var flight = _flightRepo.GetFlightById(flightId) ?? throw new Exception("Flight not found");

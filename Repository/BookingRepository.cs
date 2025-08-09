@@ -12,6 +12,7 @@ public class BookingRepository
         _filePath = filePath;
         _bookings = LoadBookings(_filePath);
     }
+    
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = _bookings.Count.ToString();

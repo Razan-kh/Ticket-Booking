@@ -1,8 +1,7 @@
-namespace Ticket_Booking.Presentation;
-
-using System;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
+
+namespace Ticket_Booking.Presentation;
 
 public class AddBookingUI
 {
@@ -14,6 +13,7 @@ public class AddBookingUI
         _flightService = flightService;
         _bookingService = bookingService;
     }
+
     public void BookFlight()
     {
         Console.WriteLine("=== Book a Flight ===");
@@ -33,6 +33,7 @@ public class AddBookingUI
         }
         _bookingService.BookFlight(passengerId, flightId, selectedClass);
     }
+
     public static string PromptFlight()
     {
         string? flightId;
@@ -47,6 +48,7 @@ public class AddBookingUI
             Console.WriteLine("Flight ID cannot be empty.");
         }
     }
+    
     private Flight? ValidateFlight(string flightId)
     {
         var flight = _flightService.GetFlightById(flightId);
@@ -55,7 +57,7 @@ public class AddBookingUI
             Console.WriteLine("Flight not found.");
             return null;
         }
-        
+
         return flight;
     }
 

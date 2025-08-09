@@ -1,9 +1,8 @@
-namespace Ticket_Booking.Presentation;
-
-using System;
 using System.Globalization;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
+
+namespace Ticket_Booking.Presentation;
 
 public class SearchFlight
 {
@@ -13,7 +12,7 @@ public class SearchFlight
     {
         _flightService = flightService;
     }
-
+    
     public void Search()
     {
         Console.WriteLine("=== Search Flights ===");
@@ -27,7 +26,7 @@ public class SearchFlight
 
         FlightClass? selectedClass = PromptFlightClass("Flight Class (Economy/Business/FirstClass)");
         double? maxPrice = PromptDouble("Max Price");
-        FlightFilter flightFilter = new ()
+        FlightFilter flightFilter = new()
         {
             DepartureCountry = depCountry,
             ArrivalAirport = arrAirport,

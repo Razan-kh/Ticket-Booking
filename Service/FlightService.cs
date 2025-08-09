@@ -1,7 +1,6 @@
-namespace Ticket_Booking.Repository;
-
-using System.Collections.Generic;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightService
 {
@@ -13,10 +12,8 @@ public class FlightService
     }
    
     public List<Flight> SearchFlights(FlightFilter flightFilter)
-    {
-        return _flightRepository.SearchFlights(flightFilter);
-    }
+    => _flightRepository.SearchFlights(flightFilter);
 
     public Flight? GetFlightById(string flightId)
-    =>_flightRepository.GetFlightById(flightId);
+    => _flightRepository.GetFlightById(flightId);
 }

@@ -1,10 +1,7 @@
-namespace Ticket_Booking.Repository;
-
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightRepository
 {
@@ -16,7 +13,9 @@ public class FlightRepository
         _filePath = filePath;
         _flights = ParseFile(_filePath);
     }
-    
+
+    public List<Flight> GetAllFlights() => _flights;
+
     public List<Flight> SearchFlights(FlightFilter filter)
     {
         return _flights.Where(f =>
@@ -36,15 +35,11 @@ public class FlightRepository
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
-
         var lines = File.ReadAllLines(filePath).Skip(1);
-
         foreach (var line in lines)
         {
             var parts = line.Split(',');
-
             if (parts.Length < 11) continue;
-
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
                 throw new FormatException($"Invalid date format in: {parts[3]}");
 
@@ -79,10 +74,8 @@ public class FlightRepository
                     { FlightClass.FirstClass, priceFirst }
                 }
             };
-
             _flights.Add(flight);
         }
-
         return _flights;
     }
 
@@ -98,6 +91,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, "Files/Flights.csv");
         }
     }
+    
     private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);
