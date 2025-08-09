@@ -1,8 +1,7 @@
-namespace Ticket_Booking.Presentation;
-
-using System;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
+
+namespace Ticket_Booking.Presentation;
 
 public class AddBookingUI
 {
@@ -14,6 +13,7 @@ public class AddBookingUI
         _flightService = flightService;
         _bookingService = bookingService;
     }
+
     public void BookFlight()
     {
         Console.WriteLine("=== Book a Flight ===");

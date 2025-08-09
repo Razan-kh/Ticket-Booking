@@ -32,18 +32,12 @@ public class FlightRepository
     public List<Flight> ParseFile(string filePath)
     {
         if (!File.Exists(filePath))
-        {
-            Console.WriteLine("Invalid File path");
-            return [];
-        }
+            throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
         var lines = File.ReadAllLines(filePath).Skip(1);
-
         foreach (var line in lines)
         {
             var parts = line.Split(',');
-
             if (parts.Length < 11) continue;
-
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
             {
                 Console.WriteLine("Skipping flight due to invalid date format.");
@@ -85,10 +79,8 @@ public class FlightRepository
                     { FlightClass.FirstClass, priceFirst }
                 }
             };
-
             _flights.Add(flight);
         }
-
         return _flights;
     }
 
@@ -104,7 +96,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, _filePath);
         }
     }
-    
+
     private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);

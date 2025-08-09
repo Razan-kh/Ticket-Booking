@@ -1,7 +1,5 @@
 namespace Ticket_Booking.Presentation;
 
-using System;
-
 class ManagerInterface
 {
     public static ManagerOptions PrintPassengerMenu()

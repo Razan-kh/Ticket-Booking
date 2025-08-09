@@ -12,7 +12,7 @@ public class BookingRepository
         _filePath = filePath;
         _bookings = LoadBookings(_filePath);
     }
-
+    
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = _bookings.Count.ToString();
@@ -68,7 +68,7 @@ public class BookingRepository
 
         return _bookings;
     }
-    
+
     public List<Booking> GetAllBookings => _bookings;
     
     public List<Booking> FilterBookings(BookingsFilter bookingFilter, List<Flight> flights)
