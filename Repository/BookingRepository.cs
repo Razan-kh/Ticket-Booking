@@ -68,22 +68,42 @@ public class BookingRepository
 
         return _bookings;
     }
+    
     public List<Booking> GetAllBookings => _bookings;
-    public List<Booking> FilterBookings(BookingsFilter bookingsFilter, List<Flight> flights)
+    
+    public List<Booking> FilterBookings(BookingsFilter bookingFilter, List<Flight> flights)
     {
         var result = from booking in _bookings
-                 join flight in flights on booking.FlightId equals flight.Id
-                 where (string.IsNullOrEmpty(bookingsFilter.FlightId) || booking.FlightId == bookingsFilter.FlightId)
-                       && (!bookingsFilter.Price.HasValue || booking.Price == bookingsFilter.Price.Value)
-                       && (string.IsNullOrEmpty(bookingsFilter.DepartureCountry) || flight.DepartureCountry == bookingsFilter.DepartureCountry)
-                       && (string.IsNullOrEmpty(bookingsFilter.DestinationCountry) || flight.DestinationCountry == bookingsFilter.DestinationCountry)
-                       && (!bookingsFilter.DepartureDate.HasValue || flight.DepartureDate.Date == bookingsFilter.DepartureDate.Value.Date)
-                       && (string.IsNullOrEmpty(bookingsFilter.DepartureAirport) || flight.DepartureAirport == bookingsFilter.DepartureAirport)
-                       && (string.IsNullOrEmpty(bookingsFilter.ArrivalAirport) || flight.ArrivalAirport == bookingsFilter.ArrivalAirport)
-                       && (string.IsNullOrEmpty(bookingsFilter.PassengerId) || booking.PassengerId == bookingsFilter.PassengerId)
-                       && (!bookingsFilter.FlightClass.HasValue || booking.Class == bookingsFilter.FlightClass)
-                 select booking;
+                     join flight in flights on booking.FlightId equals flight.Id
+                     select new { Booking = booking, Flight = flight };
 
-        return result.ToList();
+        if (!string.IsNullOrEmpty(bookingFilter.FlightId))
+            result = result.Where(entry => entry.Booking.FlightId == bookingFilter.FlightId);
+
+        if (bookingFilter.Price.HasValue)
+            result = result.Where(entry => entry.Booking.Price == bookingFilter.Price.Value);
+
+        if (!string.IsNullOrEmpty(bookingFilter.DepartureCountry))
+            result = result.Where(entry => entry.Flight.DepartureCountry == bookingFilter.DepartureCountry);
+
+        if (!string.IsNullOrEmpty(bookingFilter.DestinationCountry))
+            result = result.Where(entry => entry.Flight.DestinationCountry == bookingFilter.DestinationCountry);
+
+        if (bookingFilter.DepartureDate.HasValue)
+            result = result.Where(entry => entry.Flight.DepartureDate.Date == bookingFilter.DepartureDate.Value.Date);
+
+        if (!string.IsNullOrEmpty(bookingFilter.DepartureAirport))
+            result = result.Where(entry => entry.Flight.DepartureAirport == bookingFilter.DepartureAirport);
+
+        if (!string.IsNullOrEmpty(bookingFilter.ArrivalAirport))
+            result = result.Where(entry => entry.Flight.ArrivalAirport == bookingFilter.ArrivalAirport);
+
+        if (!string.IsNullOrEmpty(bookingFilter.PassengerId))
+            result = result.Where(entry => entry.Booking.PassengerId == bookingFilter.PassengerId);
+
+        if (bookingFilter.FlightClass.HasValue)
+            result = result.Where(entry => entry.Booking.Class == bookingFilter.FlightClass.Value);
+
+        return result.Select(entry => entry.Booking).ToList();
     }
 }

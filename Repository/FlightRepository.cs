@@ -1,10 +1,7 @@
-namespace Ticket_Booking.Repository;
-
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightRepository
 {
@@ -37,7 +34,7 @@ public class FlightRepository
         if (!File.Exists(filePath))
         {
             Console.WriteLine("Invalid File path");
-            return [];  
+            return [];
         }
         var lines = File.ReadAllLines(filePath).Skip(1);
 
@@ -107,6 +104,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, _filePath);
         }
     }
+    
     private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);
