@@ -7,8 +7,8 @@ class UserInterface
         while (true)
         {
             Console.WriteLine("=== Main Menu ===");
-            System.Console.WriteLine("- If you are a passenger, Press 1");
-            System.Console.WriteLine("- If you are  a manager, Press 2");
+            Console.WriteLine("- If you are a passenger, Press 1");
+            Console.WriteLine("- If you are  a manager, Press 2");
             string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {

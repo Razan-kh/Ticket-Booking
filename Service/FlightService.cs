@@ -1,14 +1,16 @@
-namespace Ticket_Booking.Repository;
-
-using System.Collections.Generic;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightService
 {
-    public required FlightRepository Repository { get; init; }
+    private readonly FlightRepository _repository;
 
-    public List<Flight> SearchFlights(FlightFilter flightFilter)
+    public FlightService(FlightRepository flightRepository)
     {
-        return Repository.SearchFlights(flightFilter);
+        _repository = flightRepository;
     }
+    
+    public List<Flight> SearchFlights(FlightFilter flightFilter)
+    => _repository.SearchFlights(flightFilter);
 }
