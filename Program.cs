@@ -43,7 +43,6 @@ class MainClass
                         case ManagerOptions.UploadUpdate:
                             ManagerInterface.UploadFile(flightService);
                             break; 
-
                     }
                     break;
             }

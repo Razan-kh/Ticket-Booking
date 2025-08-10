@@ -1,7 +1,7 @@
-namespace Ticket_Booking.Presentation;
-
 using System;
 using Ticket_Booking.Repository;
+
+namespace Ticket_Booking.Presentation;
 
 class ManagerInterface
 {
@@ -26,6 +26,7 @@ class ManagerInterface
             return choice;
         }
     }
+    
     public static void UploadFile(FlightService flightService)
     {
         Console.Write("Enter path to the flight CSV file: ");
