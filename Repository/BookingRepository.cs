@@ -114,12 +114,16 @@ public class BookingRepository
         _bookings[index] = updated;
         File.WriteAllLines(_filePath, _bookings.Select(SerializeBooking));
     }
+    
+    public Booking? GetById(string bookingId) =>
+        GetAll().FirstOrDefault(b => b.BookingId == bookingId);
+
+    public List<Booking> GetAll() => _bookings;
 
     private Booking? ParseBooking(string line)
     {
         var parts = line.Split(',');
         if (parts.Length < 5) return null;
-
         if (!double.TryParse(parts[4], NumberStyles.Any, CultureInfo.InvariantCulture, out var price))
             throw new FormatException($"Invalid price format: {parts[4]}");
 
@@ -138,7 +142,4 @@ public class BookingRepository
 
     public List<Booking> GetByPassengerId(string passengerId) =>
         _bookings.Where(b => b.PassengerId == passengerId).ToList();
-
-    public Booking? GetById(string bookingId) =>
-        _bookings.FirstOrDefault(b => b.BookingId == bookingId);
 }

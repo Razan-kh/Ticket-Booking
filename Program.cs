@@ -1,5 +1,4 @@
-﻿using Ticket_Booking.Passenger;
-using Ticket_Booking.Presentation;
+﻿using Ticket_Booking.Presentation;
 using Ticket_Booking.Repository;
 
 namespace Ticket_Booking;
@@ -36,6 +35,9 @@ class MainClass
                         case PassengerOptions.UpdateBooking:
                             passengerInterface.UpdateBooking();
                             break;
+                        case PassengerOptions.PersonalBookings:
+                            PassengerInterface.PersonalBookings(bookingService);
+                            break;    
                         default:
                             Console.WriteLine("Invalid passenger option.");
                             break;
