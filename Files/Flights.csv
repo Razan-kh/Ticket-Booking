@@ -1,3 +1,3 @@
 Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice
-F002,USA,France,2025-08-12,JFK,CDG,23,10,1,450,900,14001
+F002,USA,France,2025-08-12,JFK,CDG,22,10,1,450,900,14001
 F001,USA,UK,2025-08-10,JFK,LHR,5,10,5,500,1000,1500
