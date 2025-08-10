@@ -41,7 +41,7 @@ class PassengerInterface
             // Make the dafault class as Economy
             newClass = FlightClass.Economy;
         }
-        _bookingService.ModifyBooking(modifyId!, newFlight!, newClass);
+        _bookingService.UpdateOne(modifyId!, newFlight!, newClass);
         Console.WriteLine("Booking updated.");
     }
 }

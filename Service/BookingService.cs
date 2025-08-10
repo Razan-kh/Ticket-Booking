@@ -68,7 +68,7 @@ public class BookingService
         booking.Class = newClass;
         booking.Price = newFlight.Prices[newClass];
         _flightRepo.UpdateFlight(newFlight);
-        _bookingRepo.Update(booking);
+        _bookingRepo.UpdateOne(booking);
     }
 
     public List<Booking> GetBookingsForPassenger(string passengerId)

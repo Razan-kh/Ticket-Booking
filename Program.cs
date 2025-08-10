@@ -33,8 +33,8 @@ class MainClass
                             AddBookingUI bookingUI = new(flightService, bookingService);
                             bookingUI.BookFlight();
                             break;
-                        case PassengerOptions.ModifyBooking:
-                            passengerInterface.ModifyBooking();
+                        case PassengerOptions.UpdateBooking:
+                            passengerInterface.UpdateBooking();
                             break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
