@@ -15,5 +15,4 @@ Flight Id : {FlightId}
 Class : {Class}
 Price : {Price}";
     }
-
 }

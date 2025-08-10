@@ -1,7 +1,7 @@
-namespace Ticket_Booking.Presentation;
-
 using System;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Presentation;
 
 public class FilterBookingsUI
 {
