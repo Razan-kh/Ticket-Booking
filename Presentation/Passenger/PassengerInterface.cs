@@ -28,7 +28,7 @@ class PassengerInterface
         }
     }
 
-    public void ModifyBooking()
+    public void UpdateBooking()
     {
         Console.Write("Enter Booking ID to modify: ");
         var modifyId = Console.ReadLine();

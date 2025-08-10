@@ -108,7 +108,7 @@ public class BookingRepository
         return result.Select(entry => entry.Booking).ToList();
     }
 
-    public void Update(Booking updated)
+    public void UpdateOne(Booking updated)
     {
         var index = _bookings.FindIndex(booking => booking.BookingId == updated.BookingId);
         _bookings[index] = updated;

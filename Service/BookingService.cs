@@ -43,7 +43,7 @@ public class BookingService
         return bookings;
     }
 
-    public void ModifyBooking(string bookingId, string newFlightId, FlightClass newClass)
+    public void UpdateOne(string bookingId, string newFlightId, FlightClass newClass)
     {
         var booking = _bookingRepo.GetById(bookingId);
         if (booking is null)
