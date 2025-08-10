@@ -55,6 +55,9 @@ class MainClass
                         case ManagerOptions.FilterBookings:
                             filterBookings.ShowFilterBookingsMenu();
                             break;
+                        case ManagerOptions.UploadUpdate:
+                            ManagerInterface.UploadFile(flightService);
+                            break; 
                     }
                 break;
             }
