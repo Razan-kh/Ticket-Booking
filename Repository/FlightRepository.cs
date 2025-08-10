@@ -1,10 +1,10 @@
-namespace Ticket_Booking.Repository;
-
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightRepository
 {
@@ -16,7 +16,7 @@ public class FlightRepository
         _filePath = filePath;
         _flights = ParseFile(_filePath);
     }
-    
+
     public List<Flight> SearchFlights(FlightFilter filter)
     {
         return _flights.Where(f =>
@@ -98,6 +98,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, "Files/Flights.csv");
         }
     }
+
     private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);

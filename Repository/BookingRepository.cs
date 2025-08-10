@@ -13,6 +13,7 @@ public class BookingRepository
         _filePath = filePath;
         _bookings = LoadBookings(_filePath);
     }
+
     public void SaveBooking(Booking booking)
     {
         booking.BookingId = _bookings.Count.ToString();
@@ -64,6 +65,7 @@ public class BookingRepository
         }
         return _bookings;
     }
+
     public void Update(Booking updated)
     {
         var bookings = GetAll();
@@ -74,6 +76,7 @@ public class BookingRepository
         bookings[index] = updated;
         File.WriteAllLines(_filePath, bookings.Select(SerializeBooking));
     }
+
     public List<Booking> GetAll()
     {
         if (!File.Exists(_filePath))
@@ -84,6 +87,7 @@ public class BookingRepository
             .Where(b => b != null)
             .ToList()!;
     }
+
     private Booking? ParseBooking(string line)
     {
         var parts = line.Split(',');
