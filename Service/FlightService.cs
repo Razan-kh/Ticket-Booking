@@ -4,13 +4,16 @@ namespace Ticket_Booking.Repository;
 
 public class FlightService
 {
-    private readonly FlightRepository _repository;
+    private readonly FlightRepository _flightRepository;
 
     public FlightService(FlightRepository flightRepository)
     {
-        _repository = flightRepository;
+        _flightRepository = flightRepository;
     }
-    
+   
     public List<Flight> SearchFlights(FlightFilter flightFilter)
-    => _repository.SearchFlights(flightFilter);
+    => _flightRepository.SearchFlights(flightFilter);
+
+    public Flight? GetFlightById(string flightId)
+    => _flightRepository.GetFlightById(flightId);
 }

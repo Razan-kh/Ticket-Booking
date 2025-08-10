@@ -6,7 +6,7 @@ namespace Ticket_Booking.Repository;
 public class FlightRepository
 {
     private readonly string _filePath;
-    private readonly List<Flight> _flights;
+    private List<Flight> _flights = [];
 
     public FlightRepository(string filePath)
     {
@@ -31,14 +31,11 @@ public class FlightRepository
         ).ToList();
     }
 
-    public static List<Flight> ParseFile(string filePath)
+    public List<Flight> ParseFile(string filePath)
     {
-        List<Flight> flights = [];
-
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
-        var lines = File.ReadAllLines(filePath);
-
+        var lines = File.ReadAllLines(filePath).Skip(1);
         foreach (var line in lines)
         {
             var parts = line.Split(',');
@@ -77,8 +74,34 @@ public class FlightRepository
                     { FlightClass.FirstClass, priceFirst }
                 }
             };
-            flights.Add(flight);
+            _flights.Add(flight);
         }
-        return flights;
+        return _flights;
+    }
+
+    public Flight? GetFlightById(string flightId)
+     => _flights.FirstOrDefault(f => f.Id == flightId);
+
+    public void UpdateFlight(Flight updatedFlight)
+    {
+        var index = _flights.FindIndex(f => f.Id == updatedFlight.Id);
+        if (index != -1)
+        {
+            _flights[index] = updatedFlight;
+            SaveFlightsToCsv(_flights, "Files/Flights.csv");
+        }
+    }
+    
+    private static void SaveFlightsToCsv(List<Flight> flights, string path)
+    {
+        using var writer = new StreamWriter(path);
+        writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
+
+        foreach (var flight in flights)
+        {
+            writer.WriteLine($"{flight.Id},{flight.DepartureCountry},{flight.DestinationCountry},{flight.DepartureDate.ToString("yyyy-MM-dd")},{flight.DepartureAirport},{flight.ArrivalAirport}," +
+                $"{flight.AvailableSeats[FlightClass.Economy]},{flight.AvailableSeats[FlightClass.Business]},{flight.AvailableSeats[FlightClass.FirstClass]}," +
+                $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
+        }
     }
 }

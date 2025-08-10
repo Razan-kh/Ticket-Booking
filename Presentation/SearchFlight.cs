@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
@@ -7,11 +6,11 @@ namespace Ticket_Booking.Presentation;
 
 public class SearchFlight
 {
-    private readonly FlightService _service;
+    private readonly FlightService _flightService;
 
     public SearchFlight(FlightService flightService)
     {
-        _service = flightService;
+        _flightService = flightService;
     }
     
     public void Search()
@@ -37,7 +36,7 @@ public class SearchFlight
             DestinationCountry = destCountry,
             MaxPrice = maxPrice
         };
-        var results = _service.SearchFlights(flightFilter);
+        var results = _flightService.SearchFlights(flightFilter);
         DisplayFlights(results, selectedClass);
     }
 
