@@ -35,7 +35,7 @@ class MainClass
                             Console.WriteLine("Invalid passenger option.");
                             break;
                     }
-                    break;
+                break;
                 case MainMenuOptions.Manager:
                     ManagerOptions ManagerOption = ManagerInterface.PrintManagerMenu();
                     switch (ManagerOption)
@@ -49,9 +49,9 @@ class MainClass
                             {
                                 Console.WriteLine($"Field: {rule.Field}, Type: {rule.Type}, Constraints: {rule.Constraints}");
                             }
-                            break;
+                        break;
                     }
-                    break;
+                break;
             }
         }
     }

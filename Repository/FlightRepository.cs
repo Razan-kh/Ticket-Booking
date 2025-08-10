@@ -199,6 +199,7 @@ public class FlightRepository
 
         return results.Select(r => r.ErrorMessage).ToList();
     }
+    
     public List<(string Field, string Type, string Constraints)> GetFlightValidationRules()
     {
         var rules = new List<(string Field, string Type, string Constraints)>();
