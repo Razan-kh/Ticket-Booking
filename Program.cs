@@ -11,9 +11,10 @@ class MainClass
         string flightsFile = "Files/Flights.csv";
         string bookingFile = "Files/Bookings.csv";
         var flightRepo = new FlightRepository(flightsFile);
-        var flightService = new FlightService (flightRepo);
-        var bookingRepo = new BookingRepository (bookingFile);
-        var bookingService = new BookingService(flightRepo, bookingRepo);
+        var flightService = new FlightService(flightRepo);
+        var bookingRepo = new BookingRepository(bookingFile);
+        var bookingService = new BookingService(flightRepo,bookingRepo);
+        FilterBookingsUI filterBookings = new FilterBookingsUI(bookingService);
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -37,7 +38,14 @@ class MainClass
                     }
                     break;
                 case MainMenuOptions.Manager:
-                    break;
+                    ManagerOptions managerOption = ManagerInterface.PrintPassengerMenu();
+                    switch (managerOption)
+                    {
+                        case ManagerOptions.FilterBookings:
+                            filterBookings.ShowFilterBookingsMenu();
+                            break;
+                    }
+                break;
             }
         }
     }

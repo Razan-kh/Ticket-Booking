@@ -2,5 +2,25 @@ namespace Ticket_Booking.Presentation;
 
 class ManagerInterface
 {
+    public static ManagerOptions PrintPassengerMenu()
+    {
+      while (true)
+        {
+            Console.WriteLine("=== Main Menu ===");
+            Console.WriteLine(@"1. Filter Bookings"); 
+            string? consoleChoice = Console.ReadLine();
+            if (!int.TryParse(consoleChoice, out int numericChoice))
+            {
+                Console.WriteLine("Invalid option. Please try again.");
+                continue;
+            }
+            if (!Enum.TryParse<ManagerOptions>(consoleChoice, out var choice))
+            {
+                Console.WriteLine("Invalid manager option selected.");
+                continue;
+            }
 
+            return choice;
+        }
+    }
 }
