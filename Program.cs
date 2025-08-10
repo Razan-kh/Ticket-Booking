@@ -28,26 +28,31 @@ class MainClass
                             SearchFlight searchFlight = new(flightService);
                             searchFlight.Search();
                             break;
+                        
                         case PassengerOptions.AddBooking:
                             AddBookingUI bookingUI = new(flightService, bookingService);
                             bookingUI.BookFlight();
                             break;
+
                         case PassengerOptions.UpdateBooking:
                             passengerInterface.UpdateBooking();
                             break;
+
                         case PassengerOptions.PersonalBookings:
                             PassengerInterface.PersonalBookings(bookingService);
                             break;
-                         case PassengerOptions.DeleteBooking:
+
+                        case PassengerOptions.DeleteBooking:
                             Console.Write("Enter Booking ID to cancel: ");
                             var cancelId = Console.ReadLine();
                             bookingService.CancelBooking(cancelId!);
                             break;
+
                         default:
                             Console.WriteLine("Invalid passenger option.");
                             break;
                     }
-                    break;
+                break;
                 case MainMenuOptions.Manager:
                     ManagerOptions managerOption = ManagerInterface.PrintPassengerMenu();
                     switch (managerOption)
@@ -55,9 +60,18 @@ class MainClass
                         case ManagerOptions.FilterBookings:
                             filterBookings.ShowFilterBookingsMenu();
                             break;
+
                         case ManagerOptions.UploadUpdate:
                             ManagerInterface.UploadFile(flightService);
-                            break; 
+                            break;
+                            
+                        case ManagerOptions.ValidationInfo:
+                            var validationInfo=flightService.ValidationInfo();
+                            foreach (var rule in validationInfo)
+                            {
+                                Console.WriteLine($"Field: {rule.Field}, Type: {rule.Type}, Constraints: {rule.Constraints}");
+                            }
+                        break;
                     }
                 break;
             }

@@ -11,7 +11,8 @@ class ManagerInterface
         {
             Console.WriteLine("=== Main Menu ===");
             Console.WriteLine(@"1. Filter Bookings
-2. Upload and Validate Flights File");
+2. Upload and Validate Flights File
+3. Generate Dynamic Validation Info"); 
             string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {

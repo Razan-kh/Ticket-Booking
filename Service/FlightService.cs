@@ -20,7 +20,10 @@ public class FlightService
         var errors = _flightRepository.ReadFlightsFromCsv(filePath);
         return errors;
     }
-    
+
+    public List<(string Field, string Type, string Constraints)> ValidationInfo()
+    => _flightRepository.GetFlightValidationRules();
+
     public Flight? GetFlightById(string flightId)
-    => _flightRepository.GetFlightById(flightId);
+    =>_flightRepository.GetFlightById(flightId);
 }
