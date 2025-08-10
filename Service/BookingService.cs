@@ -42,4 +42,37 @@ public class BookingService
         var bookings = _bookingRepo.FilterBookings(bookingsFilter, flights);
         return bookings;
     }
+
+    public void ModifyBooking(string bookingId, string newFlightId, FlightClass newClass)
+    {
+        var booking = _bookingRepo.GetById(bookingId);
+        if (booking is null)
+        {
+            Console.WriteLine("Booking does not exist");
+            return;
+        }
+
+        var newFlight = _flightRepo.GetFlightById(newFlightId);
+        if (newFlight is null)
+        {
+            Console.WriteLine("Flight does not exist");
+            return;
+        }
+        if (!newFlight.AvailableSeats.TryGetValue(newClass, out int value) || value <= 0)
+            {
+                Console.WriteLine("No available seats");
+                return;
+            }
+        newFlight.AvailableSeats[newClass] = --value;
+        booking.FlightId = newFlightId;
+        booking.Class = newClass;
+        booking.Price = newFlight.Prices[newClass];
+        _flightRepo.UpdateFlight(newFlight);
+        _bookingRepo.Update(booking);
+    }
+
+    public List<Booking> GetBookingsForPassenger(string passengerId)
+    {
+        return _bookingRepo.GetByPassengerId(passengerId);
+    }
 }
