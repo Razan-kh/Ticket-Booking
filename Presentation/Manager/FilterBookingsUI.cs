@@ -74,6 +74,7 @@ public class FilterBookingsUI
 
         return filterBookings;
     }
+    
     public static void PrintBookings(List<Booking> bookings)
     {
         Console.WriteLine($"\n==== Found {bookings.Count} Booking(s) ====\n");
