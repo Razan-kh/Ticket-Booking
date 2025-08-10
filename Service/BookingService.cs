@@ -11,7 +11,7 @@ public class BookingService
         _bookingRepo = bookingRepository;
         _flightRepo = flightRepository;
     }
-    
+
     public void BookFlight(string passengerId, string flightId, FlightClass selectedClass)
     {
         var flight = _flightRepo.GetFlightById(flightId) ?? throw new Exception("Flight not found");
@@ -59,10 +59,10 @@ public class BookingService
             return;
         }
         if (!newFlight.AvailableSeats.TryGetValue(newClass, out int value) || value <= 0)
-            {
-                Console.WriteLine("No available seats");
-                return;
-            }
+        {
+            Console.WriteLine("No available seats");
+            return;
+        }
         newFlight.AvailableSeats[newClass] = --value;
         booking.FlightId = newFlightId;
         booking.Class = newClass;
@@ -72,7 +72,16 @@ public class BookingService
     }
 
     public List<Booking> GetBookingsForPassenger(string passengerId)
+    => _bookingRepo.GetByPassengerId(passengerId);
+    
+    public void CancelBooking(string bookingId)
     {
-        return _bookingRepo.GetByPassengerId(passengerId);
+        var booking = _bookingRepo.GetById(bookingId);
+        if (booking is null)
+        {
+            Console.WriteLine("Booking id is wrong");
+            return;  
+        }
+        _bookingRepo.DeleteOne(bookingId);
     }
 }

@@ -37,7 +37,12 @@ class MainClass
                             break;
                         case PassengerOptions.PersonalBookings:
                             PassengerInterface.PersonalBookings(bookingService);
-                            break;    
+                            break;
+                         case PassengerOptions.DeleteBooking:
+                            Console.Write("Enter Booking ID to cancel: ");
+                            var cancelId = Console.ReadLine();
+                            bookingService.CancelBooking(cancelId!);
+                            break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
                             break;

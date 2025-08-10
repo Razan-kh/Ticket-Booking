@@ -137,6 +137,12 @@ public class BookingRepository
         };
     }
 
+    public void DeleteOne(string bookingId)
+    {
+        _bookings = _bookings.Where(b => b.BookingId != bookingId).ToList();
+        File.WriteAllLines(_filePath, _bookings.Select(SerializeBooking));
+    }
+
     private string SerializeBooking(Booking booking) =>
         $"{booking.BookingId},{booking.PassengerId},{booking.FlightId},{booking.Class},{booking.Price}";
 

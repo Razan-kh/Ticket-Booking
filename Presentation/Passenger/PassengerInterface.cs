@@ -17,7 +17,8 @@ class PassengerInterface
             System.Console.WriteLine(@"1. Search for Available Flights
 2. Book a Flight
 3. Modify a Booking
-4. View Personal Bookings");
+4. View Personal Bookings
+5. Delete a Booking"); 
             string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {
