@@ -1,7 +1,7 @@
 using System;
-using Ticket_Booking.Repository;
+using TicketBooking.Repository;
 
-namespace Ticket_Booking.Presentation;
+namespace TicketBooking.Presentation;
 
 class ManagerInterface
 {

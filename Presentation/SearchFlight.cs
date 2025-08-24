@@ -1,8 +1,8 @@
 using System.Globalization;
-using Ticket_Booking.Models;
-using Ticket_Booking.Repository;
+using TicketBooking.Models;
+using TicketBooking.Repository;
 
-namespace Ticket_Booking.Presentation;
+namespace TicketBooking.Presentation;
 
 public class SearchFlight
 {

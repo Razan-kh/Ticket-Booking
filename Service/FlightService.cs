@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Ticket_Booking.Models;
+using TicketBooking.Models;
 
-namespace Ticket_Booking.Repository;
+namespace TicketBooking.Repository;
 
 public class FlightService
 {

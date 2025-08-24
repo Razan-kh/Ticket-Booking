@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Globalization;
-using Ticket_Booking.Models;
+using TicketBooking.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Ticket_Booking.Repository;
+namespace TicketBooking.Repository;
 
 public class FlightRepository
 {
