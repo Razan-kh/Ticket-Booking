@@ -1,5 +1,5 @@
-using Ticket_Booking.Models;
-using Ticket_Booking.Repository;
+using TicketBooking.Models;
+using TicketBooking.Repository;
 
 public class BookingService
 {

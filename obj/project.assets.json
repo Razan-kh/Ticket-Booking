@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Courses\\Foothill\\Ticket-Booking\\Ticket-Booking.csproj",
-      "projectName": "Ticket-Booking",
-      "projectPath": "D:\\Courses\\Foothill\\Ticket-Booking\\Ticket-Booking.csproj",
+      "projectUniqueName": "D:\\Courses\\Foothill\\TicketBooking\\TicketBooking.csproj",
+      "projectName": "TicketBooking",
+      "projectPath": "D:\\Courses\\Foothill\\TicketBooking\\TicketBooking.csproj",
       "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "D:\\Courses\\Foothill\\Ticket-Booking\\obj\\",
+      "outputPath": "D:\\Courses\\Foothill\\TicketBooking\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"

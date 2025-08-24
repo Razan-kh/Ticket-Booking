@@ -1,7 +1,7 @@
-﻿using Ticket_Booking.Presentation;
-using Ticket_Booking.Repository;
+﻿using TicketBooking.Presentation;
+using TicketBooking.Repository;
 
-namespace Ticket_Booking;
+namespace TicketBooking;
 
 class MainClass
 {

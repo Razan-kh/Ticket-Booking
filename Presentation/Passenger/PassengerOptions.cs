@@ -1,4 +1,4 @@
-namespace Ticket_Booking.Presentation;
+namespace TicketBooking.Presentation;
 
 enum PassengerOptions
 {

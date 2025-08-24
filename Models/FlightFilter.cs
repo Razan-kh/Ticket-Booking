@@ -1,4 +1,4 @@
-namespace Ticket_Booking.Models;
+namespace TicketBooking.Models;
 public class FlightFilter
 {
     public string? DepartureCountry { get; set; }

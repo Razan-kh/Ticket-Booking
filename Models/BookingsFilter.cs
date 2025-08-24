@@ -1,4 +1,4 @@
-namespace Ticket_Booking.Models;
+namespace TicketBooking.Models;
 
 public class BookingsFilter
 {

@@ -1,7 +1,7 @@
 using System;
-using Ticket_Booking.Models;
+using TicketBooking.Models;
 
-namespace Ticket_Booking.Presentation;
+namespace TicketBooking.Presentation;
 
 public class FilterBookingsUI
 {
