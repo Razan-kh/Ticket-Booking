@@ -10,9 +10,9 @@ public class FlightService
     {
         _flightRepository = flightRepository;
     }
-   
+    
     public List<Flight> SearchFlights(FlightFilter flightFilter)
-    => _flightRepository.SearchFlights(flightFilter);
+     => _flightRepository.SearchFlights(flightFilter);
 
     public Flight? GetFlightById(string flightId)
     => _flightRepository.GetFlightById(flightId);

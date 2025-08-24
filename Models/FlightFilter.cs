@@ -1,5 +1,4 @@
-namespace Ticket_Booking.Models
-{
+namespace Ticket_Booking.Models;
     public class FlightFilter
     {
         public string? DepartureCountry { get; set; }
@@ -10,4 +9,3 @@ namespace Ticket_Booking.Models
         public double? MaxPrice { get; set; }
         public FlightClass? ClassType { get; set; }
     }
-}

@@ -2,7 +2,7 @@
 using Ticket_Booking.Models;
 using Ticket_Booking.Repository;
 
-public class BookingService 
+public class BookingService
 {
     private readonly FlightRepository _flightRepo;
     private readonly BookingRepository _bookingRepo;
@@ -35,5 +35,12 @@ public class BookingService
 
         _bookingRepo.SaveBooking(booking);
         _flightRepo.UpdateFlight(flight);
+    }
+
+    public List<Booking> FilterBookings(BookingsFilter bookingsFilter)
+    {
+        var flights = _flightRepo.GetAllFlights();
+        var bookings = _bookingRepo.FilterBookings(bookingsFilter, flights);
+        return bookings;
     }
 }
