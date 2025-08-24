@@ -42,8 +42,14 @@ class MainClass
                     {
                         case ManagerOptions.UploadUpdate:
                             ManagerInterface.UploadFile(flightService);
-                            break; 
-
+                            break;
+                        case ManagerOptions.ValidationInfo:
+                            var validationInfo=flightService.ValidationInfo();
+                            foreach (var rule in validationInfo)
+                            {
+                                Console.WriteLine($"Field: {rule.Field}, Type: {rule.Type}, Constraints: {rule.Constraints}");
+                            }
+                            break;
                     }
                     break;
             }
