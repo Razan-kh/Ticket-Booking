@@ -2,7 +2,8 @@ namespace Ticket_Booking.Presentation;
 
 enum PassengerOptions
 {
-    Search           = 1,
-    AddBooking       = 2,
-    PersonalBookings = 3
+    Search = 1,
+    AddBooking = 2,
+    ModifyBooking = 3,
+    PersonalBookings = 4
 }

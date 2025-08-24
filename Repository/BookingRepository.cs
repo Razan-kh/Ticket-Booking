@@ -34,7 +34,8 @@ public class BookingRepository
             Console.WriteLine("File not found");
             return [];
         }
-        var lines = File.ReadAllLines(filePath);
+        var lines = File.ReadAllLines(filePath).Skip(1);
+
         foreach (var line in lines)
         {
             if (string.IsNullOrWhiteSpace(line))
@@ -107,6 +108,52 @@ public class BookingRepository
 
         return result.Select(entry => entry.Booking).ToList();
     }
+
     public List<Booking> GetByPassengerId(string passengerId) =>
         _bookings.Where(b => b.PassengerId == passengerId).ToList();
+
+    public void Update(Booking updated)
+    {
+        var bookings = GetAll();
+        var index = bookings.FindIndex(b => b.BookingId == updated.BookingId);
+        if (index == -1)
+            throw new Exception("Booking not found.");
+
+        bookings[index] = updated;
+        File.WriteAllLines(_filePath, bookings.Select(SerializeBooking));
+    }
+
+    public List<Booking> GetAll()
+    {
+        if (!File.Exists(_filePath))
+            throw new FileNotFoundException("Booking file not found.");
+
+        return File.ReadAllLines(_filePath)
+            .Select(ParseBooking)
+            .Where(b => b != null)
+            .ToList()!;
+    }
+
+    private Booking? ParseBooking(string line)
+    {
+        var parts = line.Split(',');
+        if (parts.Length < 5) return null;
+
+        if (!double.TryParse(parts[4], NumberStyles.Any, CultureInfo.InvariantCulture, out var price))
+            throw new FormatException($"Invalid price format: {parts[4]}");
+
+        return new Booking
+        {
+            BookingId = parts[0],
+            PassengerId = parts[1],
+            FlightId = parts[2],
+            Class = Enum.Parse<FlightClass>(parts[3]),
+            Price = price
+        };
+    }
+    private string SerializeBooking(Booking booking) =>
+        $"{booking.BookingId},{booking.PassengerId},{booking.FlightId},{booking.Class},{booking.Price}";
+        
+    public Booking? GetById(string bookingId) =>
+        GetAll().FirstOrDefault(b => b.BookingId == bookingId);
 }

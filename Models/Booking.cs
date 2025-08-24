@@ -8,6 +8,7 @@ public class Booking
     public required FlightClass Class { get; set; }
     public required double Price { get; set; }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     
@@ -24,3 +25,6 @@ Price : {Price}";
 
 >>>>>>> eaa622707cd7dd6ab15a8a3f2d331e162a440a17
 }
+=======
+}
+>>>>>>> UpdateBooking

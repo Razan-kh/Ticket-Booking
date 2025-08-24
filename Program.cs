@@ -14,6 +14,7 @@ class MainClass
         var bookingRepo = new BookingRepository(bookingFile);
         var bookingService = new BookingService(flightRepo,bookingRepo);
         FilterBookingsUI filterBookings = new FilterBookingsUI(bookingService);
+        PassengerInterface passengerInterface = new(bookingService);
         while (true)
         {
             MainMenuOptions choice = UserInterface.PrintMenu();
@@ -33,12 +34,15 @@ class MainClass
                             break;
                         case PassengerOptions.PersonalBookings:
                             PassengerInterface.PersonalBookings(bookingService);
-                            break;    
+                            break;
+                        case PassengerOptions.ModifyBooking:
+                            passengerInterface.ModifyBooking();
+                            break;
                         default:
                             Console.WriteLine("Invalid passenger option.");
                             break;
                     }
-                    break;
+                break;
                 case MainMenuOptions.Manager:
                     ManagerOptions managerOption = ManagerInterface.PrintPassengerMenu();
                     switch (managerOption)
