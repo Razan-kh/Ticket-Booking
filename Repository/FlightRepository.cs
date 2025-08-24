@@ -14,8 +14,6 @@ public class FlightRepository
         _flights = ParseFile(_filePath);
     }
 
-    public List<Flight> GetAllFlights() => _flights;
-
     public List<Flight> SearchFlights(FlightFilter filter)
     {
         return _flights.Where(f =>
@@ -41,18 +39,25 @@ public class FlightRepository
             var parts = line.Split(',');
             if (parts.Length < 11) continue;
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
-                throw new FormatException($"Invalid date format in: {parts[3]}");
+            {
+                Console.WriteLine("Skipping flight due to invalid date format.");
+                continue;
+            }
 
             if (!int.TryParse(parts[6], out var seatsEconomy) ||
                 !int.TryParse(parts[7], out var seatsBusiness) ||
                 !int.TryParse(parts[8], out var seatsFirst))
-                throw new FormatException("Invalid seat count.");
-
+            {
+                Console.WriteLine("Skipping flight due to invalid format.");
+                continue;
+            }
             if (!double.TryParse(parts[9], out var priceEconomy) ||
                 !double.TryParse(parts[10], out var priceBusiness) ||
                 !double.TryParse(parts[11], out var priceFirst))
-                throw new FormatException("Invalid price format.");
-
+            {
+                Console.WriteLine("Skipping flight due to invalid format.");
+                continue;
+            }
             var flight = new Flight
             {
                 Id = parts[0],
@@ -91,7 +96,7 @@ public class FlightRepository
             SaveFlightsToCsv(_flights, _filePath);
         }
     }
-    
+
     private static void SaveFlightsToCsv(List<Flight> flights, string path)
     {
         using var writer = new StreamWriter(path);
@@ -104,4 +109,7 @@ public class FlightRepository
                 $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
         }
     }
+
+    public List<Flight> GetAllFlights()
+    => _flights;
 }

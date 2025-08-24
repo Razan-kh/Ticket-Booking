@@ -37,4 +37,11 @@ public class BookingService
     }
     public List<Booking> GetBookingsForPassenger(string passengerId)
     => _bookingRepo.GetByPassengerId(passengerId);
+
+    public List<Booking> FilterBookings(BookingsFilter bookingsFilter)
+    {
+        var flights = _flightRepo.GetAllFlights();
+        var bookings = _bookingRepo.FilterBookings(bookingsFilter, flights);
+        return bookings;
+    }
 }
