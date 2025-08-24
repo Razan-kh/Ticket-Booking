@@ -1,4 +1,4 @@
-namespace Ticket_Booking.Passenger;
+namespace Ticket_Booking.Presentation;
 
 class PassengerInterface
 {
@@ -8,7 +8,8 @@ class PassengerInterface
         {
             Console.WriteLine("=== Main Menu ===");
             Console.WriteLine(@"1. Search for Available Flights
-2. Book a Flight"); 
+2. Book a Flight
+3. View Personal Bookings");
             string? consoleChoice = Console.ReadLine();
             if (!int.TryParse(consoleChoice, out int numericChoice))
             {
@@ -18,5 +19,15 @@ class PassengerInterface
             PassengerOptions choice = (PassengerOptions)numericChoice;
             return choice;
         }
+    }
+    public static void PersonalBookings(BookingService bookingService)
+    {
+        Console.WriteLine("Enter Your Id");
+        var passengerId = Console.ReadLine();
+        if(string.IsNullOrEmpty(passengerId))
+            Console.WriteLine("Please enter a valid Id");
+        var bookings = bookingService.GetBookingsForPassenger(passengerId!);
+        foreach (var b in bookings)
+            Console.WriteLine(b);
     }
 }

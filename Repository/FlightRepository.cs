@@ -88,7 +88,7 @@ public class FlightRepository
         if (index != -1)
         {
             _flights[index] = updatedFlight;
-            SaveFlightsToCsv(_flights, "Files/Flights.csv");
+            SaveFlightsToCsv(_flights, _filePath);
         }
     }
     
