@@ -1,7 +1,7 @@
-namespace Ticket_Booking.Repository;
-
 using System.Collections.Generic;
 using Ticket_Booking.Models;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightService
 {
@@ -11,11 +11,18 @@ public class FlightService
     {
         _flightRepository = flightRepository;
     }
-   
+    
     public List<Flight> SearchFlights(FlightFilter flightFilter)
+     => _flightRepository.SearchFlights(flightFilter);
+
+    public List<string> BatchUploadFlights(string filePath)
     {
-        return _flightRepository.SearchFlights(flightFilter);
+        var errors = _flightRepository.ReadFlightsFromCsv(filePath);
+        return errors;
     }
+
+    public List<(string Field, string Type, string Constraints)> ValidationInfo()
+    => _flightRepository.GetFlightValidationRules();
 
     public Flight? GetFlightById(string flightId)
     =>_flightRepository.GetFlightById(flightId);

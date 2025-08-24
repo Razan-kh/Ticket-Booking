@@ -1,10 +1,10 @@
-namespace Ticket_Booking.Repository;
-
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System;
 using Ticket_Booking.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+
+namespace Ticket_Booking.Repository;
 
 public class FlightRepository
 {
@@ -16,7 +16,7 @@ public class FlightRepository
         _filePath = filePath;
         _flights = ParseFile(_filePath);
     }
-    
+
     public List<Flight> SearchFlights(FlightFilter filter)
     {
         return _flights.Where(f =>
@@ -36,27 +36,129 @@ public class FlightRepository
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"The file at path '{filePath}' was not found.");
-
         var lines = File.ReadAllLines(filePath).Skip(1);
-
         foreach (var line in lines)
         {
             var parts = line.Split(',');
-
             if (parts.Length < 11) continue;
-
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
-                throw new FormatException($"Invalid date format in: {parts[3]}");
+            {
+                Console.WriteLine("Skipping flight due to invalid date format.");
+                continue;
+            }
 
             if (!int.TryParse(parts[6], out var seatsEconomy) ||
                 !int.TryParse(parts[7], out var seatsBusiness) ||
                 !int.TryParse(parts[8], out var seatsFirst))
-                throw new FormatException("Invalid seat count.");
+            {
+                Console.WriteLine("Skipping flight due to invalid format.");
+                continue;
+            }
+            if (!double.TryParse(parts[9], out var priceEconomy) ||
+                !double.TryParse(parts[10], out var priceBusiness) ||
+                !double.TryParse(parts[11], out var priceFirst))
+            {
+                Console.WriteLine("Skipping flight due to invalid format.");
+                continue;
+            }
+            var flight = new Flight
+            {
+                Id = parts[0],
+                DepartureCountry = parts[1],
+                DestinationCountry = parts[2],
+                DepartureDate = departureDate,
+                DepartureAirport = parts[4],
+                ArrivalAirport = parts[5],
+                AvailableSeats = new Dictionary<FlightClass, int>
+                {
+                    { FlightClass.Economy, seatsEconomy },
+                    { FlightClass.Business, seatsBusiness },
+                    { FlightClass.FirstClass, seatsFirst }
+                },
+                Prices = new Dictionary<FlightClass, double>
+                {
+                    { FlightClass.Economy, priceEconomy },
+                    { FlightClass.Business, priceBusiness },
+                    { FlightClass.FirstClass, priceFirst }
+                }
+            };
+            _flights.Add(flight);
+        }
+        return _flights;
+    }
+
+    public Flight? GetFlightById(string flightId)
+     => _flights.FirstOrDefault(f => f.Id == flightId);
+
+    public void UpdateFlight(Flight updatedFlight)
+    {
+        var index = _flights.FindIndex(f => f.Id == updatedFlight.Id);
+        if (index != -1)
+        {
+            _flights[index] = updatedFlight;
+            SaveFlightsToCsv(_flights, _filePath);
+        }
+    }
+
+    private static void SaveFlightsToCsv(List<Flight> flights, string path)
+    {
+        using var writer = new StreamWriter(path);
+        writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
+
+        foreach (var flight in flights)
+        {
+            writer.WriteLine($"{flight.Id},{flight.DepartureCountry},{flight.DestinationCountry},{flight.DepartureDate.ToString("yyyy-MM-dd")},{flight.DepartureAirport},{flight.ArrivalAirport}," +
+                $"{flight.AvailableSeats[FlightClass.Economy]},{flight.AvailableSeats[FlightClass.Business]},{flight.AvailableSeats[FlightClass.FirstClass]}," +
+                $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
+        }
+    }
+
+    public List<Flight> GetAllFlights()
+    => _flights;
+    
+    public List<string> ReadFlightsFromCsv(string filePath)
+    {
+        var errors = new List<string>();
+        _flights.Clear();
+        if (!File.Exists(filePath))
+        {
+            errors.Add("File not found.");
+            return errors;
+        }
+        var lines = File.ReadAllLines(filePath).Skip(1);
+        int lineNum = 1;
+        foreach (var line in lines)
+        {
+            var parts = line.Split(',');
+            if (parts.Length < 12)
+            {
+                errors.Add($"Line {lineNum}: Not enough data.");
+                lineNum++;
+                continue;
+            }
+            if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var departureDate))
+            {
+                errors.Add($"Line {lineNum}: Invalid date format: {parts[3]}");
+                lineNum++;
+                continue;
+            }
+            if (!int.TryParse(parts[6], out var seatsEconomy) ||
+                !int.TryParse(parts[7], out var seatsBusiness) ||
+                !int.TryParse(parts[8], out var seatsFirst))
+            {
+                errors.Add($"Line {lineNum}: Invalid seat count.");
+                lineNum++;
+                continue;
+            }
 
             if (!double.TryParse(parts[9], out var priceEconomy) ||
                 !double.TryParse(parts[10], out var priceBusiness) ||
                 !double.TryParse(parts[11], out var priceFirst))
-                throw new FormatException("Invalid price format.");
+            {
+                errors.Add($"Line {lineNum}: Invalid price format.");
+                lineNum++;
+                continue;
+            }
 
             var flight = new Flight
             {
@@ -80,34 +182,49 @@ public class FlightRepository
                 }
             };
 
-            _flights.Add(flight);
+            var validation = ValidateFlight(flight);
+            if (validation.Count != 0)
+                errors.Add($"Line {lineNum}: {string.Join(", ", validation)}");
+            else
+                _flights.Add(flight);
+            lineNum++;
         }
 
-        return _flights;
+        return errors;
     }
 
-    public Flight? GetFlightById(string flightId)
-     => _flights.FirstOrDefault(f => f.Id == flightId);
-
-    public void UpdateFlight(Flight updatedFlight)
+    public static List<string?> ValidateFlight(Flight flight)
     {
-        var index = _flights.FindIndex(f => f.Id == updatedFlight.Id);
-        if (index != -1)
-        {
-            _flights[index] = updatedFlight;
-            SaveFlightsToCsv(_flights, "Files/Flights.csv");
-        }
+        var context = new ValidationContext(flight);
+        var results = new List<ValidationResult>();
+
+        bool isValid = Validator.TryValidateObject(flight, context, results, true);
+
+        return results.Select(r => r.ErrorMessage).ToList();
     }
-    private static void SaveFlightsToCsv(List<Flight> flights, string path)
-    {
-        using var writer = new StreamWriter(path);
-        writer.WriteLine("Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,EconomySeats,BusinessSeats,FirstClassSeats,EconomyPrice,BusinessPrice,FirstClassPrice");
 
-        foreach (var flight in flights)
+    public List<(string Field, string Type, string Constraints)> GetFlightValidationRules()
+    {
+        var rules = new List<(string Field, string Type, string Constraints)>();
+        var properties = typeof(Flight).GetProperties();
+
+        foreach (var prop in properties)
         {
-            writer.WriteLine($"{flight.Id},{flight.DepartureCountry},{flight.DestinationCountry},{flight.DepartureDate.ToString("yyyy-MM-dd")},{flight.DepartureAirport},{flight.ArrivalAirport}," +
-                $"{flight.AvailableSeats[FlightClass.Economy]},{flight.AvailableSeats[FlightClass.Business]},{flight.AvailableSeats[FlightClass.FirstClass]}," +
-                $"{flight.Prices[FlightClass.Economy]},{flight.Prices[FlightClass.Business]},{flight.Prices[FlightClass.FirstClass]}");
+            string fieldName = prop.Name;
+            string fieldType = prop.PropertyType.Name;
+            var attributes = prop.GetCustomAttributes<ValidationAttribute>();
+
+            string constraints = string.Join(", ", attributes.Select(attr =>
+            {
+                if (attr is RequiredAttribute) return "Required";
+                if (attr is RangeAttribute rangeAttr) return $"Range({rangeAttr.Minimum} to {rangeAttr.Maximum})";
+                if (attr is DataTypeAttribute dataTypeAttr) return dataTypeAttr.DataType.ToString();
+                return attr.GetType().Name.Replace("Attribute", "");
+            }));
+
+            rules.Add((fieldName, fieldType, constraints));
         }
+
+        return rules;
     }
 }
