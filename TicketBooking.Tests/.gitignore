@@ -426,4 +426,20 @@ TestResults/
 *.coverage
 *.coveragexml
 
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.vs/
+*.user
+*.suo
+
 # End of https://www.toptal.com/developers/gitignore/api/csharp
