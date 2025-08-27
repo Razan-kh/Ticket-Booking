@@ -5,5 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  
+<PropertyGroup>
+  <OutputType>Exe</OutputType> <!-- instead of Library -->
+  <TargetFramework>net8.0</TargetFramework>
+</PropertyGroup>
 
 </Project>
