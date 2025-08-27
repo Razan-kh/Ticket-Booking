@@ -401,4 +401,29 @@ FodyWeavers.xsd
 
 *.dll
 *.cache
+
+# Build Folders
+bin/
+obj/
+
+# Visual Studio / Rider / VS Code
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Test results
+TestResults/
+*.trx
+
+# Coverage
+*.coverage
+*.coveragexml
+
 # End of https://www.toptal.com/developers/gitignore/api/csharp
