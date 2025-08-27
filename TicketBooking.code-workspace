@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"name": "TicketBooking",
+		"path": "."
+	},
+	{
+		"name": "TicketBooking.Tests",
+		"path": "TicketBooking.Tests"
+	}
+],
+  "settings": {}
+}
