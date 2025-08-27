@@ -105,3 +105,6 @@ D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\obj\Debug\net8.0\TicketBoo
 D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\obj\Debug\net8.0\TicketBooking.Tests.genruntimeconfig.cache
 D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\obj\Debug\net8.0\ref\TicketBooking.Tests.dll
 D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\obj\Debug\net8.0\TicketBooking.Tests.sourcelink.json
+D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\bin\Debug\net8.0\TicketBooking.deps.json
+D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\bin\Debug\net8.0\TicketBooking.runtimeconfig.json
+D:\Courses\Foothill\TicketBooking\TicketBooking.Tests\bin\Debug\net8.0\TicketBooking.exe
