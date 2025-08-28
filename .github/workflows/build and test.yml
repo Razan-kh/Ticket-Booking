@@ -26,7 +26,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
+        
+    - name: List repo files
+      run: ls -R
+      
     - name: Install dependencies
       run: dotnet restore TicketBooking/TicketBooking.sln
       
