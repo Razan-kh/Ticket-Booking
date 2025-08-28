@@ -5,38 +5,50 @@ on:
     branches: [ dev ]
   pull_request:
     branches: [ main ]
-
     paths:
-    - '**.cs'
-    - '**.csproj'
+      - '**.cs'
+      - '**.csproj'
 
 env:
   DOTNET_VERSION: '6.0.401' # The .NET SDK version to use
 
 jobs:
   build-and-test:
-
-    name: build-and-test-${{matrix.os}}
+    name: build-and-test-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET Core
+    - name: Checkout dev branch
+      uses: actions/checkout@v3
+      with:
+        ref: dev   # Always build from dev branch
+
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-        
-    - name: List repo files
+
+    - name: Debug - List files
       run: ls -R
-      
-    - name: Install dependencies
-      run: dotnet restore TicketBooking/TicketBooking.sln
-      
+
+    - name: Restore dependencies
+      shell: bash
+      run: |
+        SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)
+        echo "Found solution: $SOLUTION_FILE"
+        dotnet restore "$SOLUTION_FILE"
+
     - name: Build
-      run: dotnet build ./**/*.sln --configuration Release --no-restore
-    
+      shell: bash
+      run: |
+        SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)
+        dotnet build "$SOLUTION_FILE" --configuration Release --no-restore
+
     - name: Test
-      run: dotnet test ./**/*.sln --no-restore --verbosity normal
+      shell: bash
+      run: |
+        SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)
+        dotnet test "$SOLUTION_FILE" --no-restore --verbosity normal
