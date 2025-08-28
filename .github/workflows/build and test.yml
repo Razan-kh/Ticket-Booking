@@ -36,7 +36,7 @@ jobs:
 
     - name: Restore dependencies
       shell: bash
-      run: dotnet restore ./TicketBooking/TicketBooking.csproj
+      run: dotnet restore ./TicketBooking.csproj
 
     - name: Build
       shell: bash
