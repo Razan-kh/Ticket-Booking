@@ -33,7 +33,6 @@ public class BookingFilterTests
     public void FilterByFlightId_ReturnsCorrectBooking()
     {
         var filter = new BookingsFilter { FlightId = "F1" };
-
         var result = _service.FilterBookings(filter);
 
         Assert.Single(result);
