@@ -1,4 +1,4 @@
-dotnet restore TicketBooking/TicketBooking.slnname: build and test
+name: build and test
 
 on:
   push:
