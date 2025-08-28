@@ -36,19 +36,12 @@ jobs:
 
     - name: Restore dependencies
       shell: bash
-      run: |
-        SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)
-        echo "Found solution: $SOLUTION_FILE"
-        dotnet restore "$SOLUTION_FILE"
+      run: dotnet restore ./TicketBooking/TicketBooking.csproj
 
     - name: Build
       shell: bash
-      run: |
-        SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)
-        dotnet build "$SOLUTION_FILE" --configuration Release --no-restore
+      run: dotnet build ./TicketBooking/TicketBooking.csproj --configuration Release --no-restore
 
     - name: Test
       shell: bash
-      run: |
-        SOLUTION_FILE=$(find . -name "*.sln" | head -n 1)
-        dotnet test "$SOLUTION_FILE" --no-restore --verbosity normal
+      run: dotnet test ./TicketBooking/TicketBooking.csproj --no-restore --verbosity normal
