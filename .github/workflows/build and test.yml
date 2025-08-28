@@ -28,7 +28,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Install dependencies
-      run: dotnet restore ./TicketBooking.sln
+      run: dotnet restore TicketBooking/TicketBooking.sln
       
     - name: Build
       run: dotnet build ./**/*.sln --configuration Release --no-restore
