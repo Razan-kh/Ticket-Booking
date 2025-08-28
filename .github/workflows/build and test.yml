@@ -40,8 +40,8 @@ jobs:
 
     - name: Build
       shell: bash
-      run: dotnet build ./TicketBooking/TicketBooking.csproj --configuration Release --no-restore
+      run: dotnet build ./TicketBooking.csproj --configuration Release --no-restore
 
     - name: Test
       shell: bash
-      run: dotnet test ./TicketBooking/TicketBooking.csproj --no-restore --verbosity normal
+      run: dotnet test ./TicketBooking.csproj --no-restore --verbosity normal
