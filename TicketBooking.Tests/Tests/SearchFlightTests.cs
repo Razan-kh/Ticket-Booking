@@ -101,14 +101,13 @@ public class SearchFlightTests
                 }
             }
         };
-
-        _mockFlightRepo.Setup(r => r.SearchFlights(It.IsAny<FlightFilter>()))
-                .Returns(new List<Flight>());
-
         var filter = new FlightFilter
         {
             DepartureCountry = "France"
         };
+
+        _mockFlightRepo.Setup(r => r.SearchFlights(It.IsAny<FlightFilter>()))
+                .Returns(new List<Flight>());
 
         // Act
         var result = _flightService.SearchFlights(filter);
