@@ -32,10 +32,13 @@ public class BookingFilterTests
     [Fact]
     public void FilterByFlightId_ReturnsCorrectBooking()
     {
+        // Arrange
         var filter = new BookingsFilter { FlightId = "F1" };
         
+        // Act
         var result = _service.FilterBookings(filter);
 
+        // Assert
         Assert.Single(result);
         Assert.Equal("B1", result.First().BookingId);
     }
@@ -43,10 +46,13 @@ public class BookingFilterTests
     [Fact]
     public void FilterByPassengerId_ReturnsOnlyPassengerBookings()
     {
+        // Arrange
         var filter = new BookingsFilter { PassengerId = "P1" };
 
+        // Act
         var result = _service.FilterBookings(filter);
 
+        // Assert
         Assert.Equal(2, result.Count);
         Assert.All(result, b => Assert.Equal("P1", b.PassengerId));
     }
@@ -54,10 +60,13 @@ public class BookingFilterTests
     [Fact]
     public void FilterByPrice_ReturnsMatchingBooking()
     {
+        // Arrange
         var filter = new BookingsFilter { Price = 200 };
 
+        // Act
         var result = _service.FilterBookings(filter);
 
+        // Assert
         Assert.Single(result);
         Assert.Equal("B2", result.First().BookingId);
     }
@@ -65,10 +74,13 @@ public class BookingFilterTests
     [Fact]
     public void FilterByDepartureCountry_ReturnsMatchingBookings()
     {
+        // Arrange
         var filter = new BookingsFilter { DepartureCountry = "USA" };
 
+        // Act
         var result = _service.FilterBookings(filter);
 
+        // Assert
         Assert.Equal(2, result.Count);
         Assert.All(result, b => Assert.Contains(b.BookingId, new[] { "B1", "B2" }));
     }
@@ -76,6 +88,7 @@ public class BookingFilterTests
     [Fact]
     public void FilterByMultipleCriteria_ReturnsCorrectBooking()
     {
+        // Arrange
         var filter = new BookingsFilter
         {
             DepartureCountry = "USA",
@@ -83,11 +96,14 @@ public class BookingFilterTests
             FlightClass = FlightClass.Business
         };
 
+        // Act
         var result = _service.FilterBookings(filter);
 
+        // Assert
         Assert.Single(result);
         Assert.Equal("B2", result.First().BookingId);
         }
+        
     private List<Booking> CreateSampleBookings() => new()
         {
             new Booking { BookingId = "B1", PassengerId = "P1", FlightId = "F1", Class = FlightClass.Economy, Price = 100 },

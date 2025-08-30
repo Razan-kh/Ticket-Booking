@@ -99,11 +99,15 @@ public class AddBookingTests
     public void BookFlight_ShouldThrowException_WhenFlightNotFound()
     {
         // Arrange
-        _flightRepoMock.Setup(r => r.GetFlightById("Invalid")).Returns((Flight?)null);
+        _flightRepoMock.Setup(r => r.GetFlightById("Invalid")).Returns(default(Flight?));
 
-        // Act + Assert
-        Assert.Throws<Exception>(() => _bookingService.BookFlight("P1", "Invalid", FlightClass.Economy));
+        // Act 
+        var exception = Assert.Throws<Exception>(
+            () => _bookingService.BookFlight("P1", "Invalid", FlightClass.Economy)
+        );
 
+        // Assert
+        Assert.Equal("Flight not found", exception.Message);
         _bookingRepoMock.Verify(r => r.SaveBooking(It.IsAny<Booking>()), Times.Never);
         _flightRepoMock.Verify(r => r.UpdateFlight(It.IsAny<Flight>()), Times.Never);
     }

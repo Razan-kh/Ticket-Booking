@@ -47,7 +47,7 @@ public class CancelBookingTests
         var invalidId = "999";
 
         // Simulate GetById returns null
-        _bookingRepoMock.Setup(r => r.GetById(invalidId)).Returns((Booking?)null);
+        _bookingRepoMock.Setup(r => r.GetById(invalidId)).Returns(default(Booking?));
 
         // Act
         _bookingService.CancelBooking(invalidId);

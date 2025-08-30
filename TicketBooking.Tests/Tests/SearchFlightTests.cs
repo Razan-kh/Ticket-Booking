@@ -46,6 +46,15 @@ public class SearchFlightTests
             }
         };
 
+        var filter = new FlightFilter
+        {
+            DepartureCountry = "USA",
+            DestinationCountry = "UK",
+            DepartureDate = new DateTime(2025, 1, 1),
+            ClassType = FlightClass.Economy,
+            MaxPrice = 600
+        };
+
         _mockFlightRepo.Setup(r => r.SearchFlights(It.IsAny<FlightFilter>()))
                 .Returns<FlightFilter>(filter =>
                     flights.FindAll(f =>
@@ -58,22 +67,13 @@ public class SearchFlightTests
                              f.Prices[filter.ClassType.Value] <= filter.MaxPrice.Value))
                     )
                 );
-
-        var filter = new FlightFilter
-        {
-            DepartureCountry = "USA",
-            DestinationCountry = "UK",
-            DepartureDate = new DateTime(2025, 1, 1),
-            ClassType = FlightClass.Economy,
-            MaxPrice = 600
-        };
-
+                
         // Act
         var result = _flightService.SearchFlights(filter);
+        var flight = result.First();
 
         // Assert 
         Assert.Single(result);                 
-        var flight = result.First();
         Assert.Equal("F1", flight.Id);          
     }
 
