@@ -1,7 +1,6 @@
 using System;
 using TicketBooking.Models;
 using TicketBooking.Service;
-using TicketBooking.Service;
 
 namespace TicketBooking.Presentation;
 

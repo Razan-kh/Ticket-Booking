@@ -71,9 +71,10 @@ public class SearchFlightTests
         // Act
         var result = _flightService.SearchFlights(filter);
 
-        // Assert
-        result.Should().ContainSingle()
-              .Which.Id.Should().Be("F1");
+        // Assert 
+        Assert.Single(result);                 
+        var flight = result.First();
+        Assert.Equal("F1", flight.Id);          
     }
 
     [Fact]
@@ -113,6 +114,6 @@ public class SearchFlightTests
         var result = _flightService.SearchFlights(filter);
 
         // Assert
-        result.Should().BeEmpty();
+        Assert.Empty(result);
     }
 }
